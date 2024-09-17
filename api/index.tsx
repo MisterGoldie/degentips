@@ -138,7 +138,7 @@ app.frame('/check-allowance', async (c) => {
             textAlign: 'center',
           }}
         >
-          Unable to retrieve user information: No FID provided
+          <div style={{ display: 'flex' }}>Unable to retrieve user information: No FID provided</div>
         </div>
       ),
       intents: [
@@ -176,12 +176,12 @@ app.frame('/check-allowance', async (c) => {
               <img src={userInfo.profileImage} alt="Profile" style={{width: '100px', height: '100px', borderRadius: '50%'}} />
             </div>
             
-            <div style={{marginTop: 'auto', marginBottom: '20px', fontSize: '32px'}}>
-              <div>Daily allowance : {latestAllowance.tip_allowance} $Degen</div>
-              <div>Remaining allowance : {latestAllowance.remaining_tip_allowance} $Degen</div>
+            <div style={{display: 'flex', flexDirection: 'column', marginTop: 'auto', marginBottom: '20px', fontSize: '32px'}}>
+              <div style={{display: 'flex'}}>Daily allowance : {latestAllowance.tip_allowance} $Degen</div>
+              <div style={{display: 'flex'}}>Remaining allowance : {latestAllowance.remaining_tip_allowance} $Degen</div>
             </div>
             
-            <div style={{fontSize: '24px', alignSelf: 'flex-end'}}>
+            <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end'}}>
               As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
                 month: 'numeric',
                 day: 'numeric',
@@ -219,7 +219,7 @@ app.frame('/check-allowance', async (c) => {
             textAlign: 'center',
           }}
         >
-          Error fetching data. Please try again later.
+          <div style={{ display: 'flex' }}>Error fetching data. Please try again later.</div>
         </div>
       ),
       intents: [
