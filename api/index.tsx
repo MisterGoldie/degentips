@@ -25,7 +25,7 @@ export const app = new Frog({
 );
 
 const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/allowances';
-const backgroundImage = "https://bafybeiedmcuxwwhimtz7ivvsa7mztnlv5t3fhe7c4jd5b6ocgnmcd52sve.ipfs.w3s.link/check%20frame.png";
+const backgroundImage = "https://bafybeif5xdeft5mfhofj3zrawmn3ldqkhemukuclndie6pnomusiwn2xoe.ipfs.w3s.link/error%20frame.png";
 const AIRSTACK_API_URL = 'https://api.airstack.xyz/gql';
 const AIRSTACK_API_KEY = '103ba30da492d4a7e89e7026a6d3a234e';
 
@@ -119,12 +119,28 @@ app.frame('/', () => {
 
 app.frame('/check-allowance', async (c) => {
   const { fid } = c.frameData ?? {};
-  const errorImage = "https://bafybeif5xdeft5mfhofj3zrawmn3ldqkhemukuclndie6pnomusiwn2xoe.ipfs.w3s.link/error%20frame.png";
 
   if (!fid) {
     console.error('No FID provided');
     return c.res({
-      image: errorImage,
+      image: (
+        <div
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            width: '1200px',
+            height: '628px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'white',
+            fontSize: '40px',
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          Unable to retrieve user information: No FID provided
+        </div>
+      ),
       intents: [
         <Button action="/">Try Again</Button>
       ],
@@ -142,15 +158,6 @@ app.frame('/check-allowance', async (c) => {
     if (allowanceDataArray && allowanceDataArray.length > 0 && userInfo) {
       const latestAllowance = allowanceDataArray[0];
       console.log('Latest Allowance Data:', latestAllowance);
-
-      if (parseFloat(latestAllowance.remaining_tip_allowance) <= 0) {
-        return c.res({
-          image: errorImage,
-          intents: [
-            <Button action="/">Check Again</Button>
-          ],
-        });
-      }
 
       return c.res({
         image: (
@@ -197,7 +204,24 @@ app.frame('/check-allowance', async (c) => {
   } catch (error) {
     console.error('Error in check-allowance frame:', error);
     return c.res({
-      image: errorImage,
+      image: (
+        <div
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            width: '1200px',
+            height: '628px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'white',
+            fontSize: '40px',
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          Error fetching data. Please try again later.
+        </div>
+      ),
       intents: [
         <Button action="/">Try Again</Button>
       ],
