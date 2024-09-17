@@ -70,8 +70,8 @@ app.frame('/', (c) => {
           textAlign: 'center',
         }}
       >
-        <div>Check your $DEGEN allowance</div>
-        <div style={{ fontSize: '24px', marginTop: '20px' }}>Click the button below to start</div>
+        <div style={{ display: 'flex' }}>Check your $DEGEN allowance</div>
+        <div style={{ display: 'flex', fontSize: '24px', marginTop: '20px' }}>Click the button below to start</div>
       </div>
     ),
     intents: [
@@ -93,6 +93,7 @@ app.frame('/check-allowance', async (c) => {
             width: '1200px',
             height: '628px',
             display: 'flex',
+            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
             color: 'white',
@@ -101,10 +102,7 @@ app.frame('/check-allowance', async (c) => {
             textAlign: 'center',
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div>Unable to retrieve user information:</div>
-            <div>No FID provided</div>
-          </div>
+          <div style={{ display: 'flex' }}>Unable to retrieve user information: No FID provided</div>
         </div>
       ),
       intents: [
@@ -138,15 +136,11 @@ app.frame('/check-allowance', async (c) => {
               textAlign: 'center',
             }}
           >
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ fontSize: '40px', marginBottom: '20px' }}>Your $DEGEN Allowance</div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div>Daily Allowance: {latestAllowance.tip_allowance} $DEGEN</div>
-                <div>Remaining Balance: {latestAllowance.remaining_tip_allowance} $DEGEN</div>
-              </div>
-              <div style={{ fontSize: '24px', marginTop: '20px' }}>
-                As of: {new Date(latestAllowance.snapshot_day).toLocaleDateString()}
-              </div>
+            <div style={{ display: 'flex', fontSize: '40px', marginBottom: '20px' }}>Your $DEGEN Allowance</div>
+            <div style={{ display: 'flex' }}>Daily Allowance: {latestAllowance.tip_allowance} $DEGEN</div>
+            <div style={{ display: 'flex' }}>Remaining Balance: {latestAllowance.remaining_tip_allowance} $DEGEN</div>
+            <div style={{ display: 'flex', fontSize: '24px', marginTop: '20px' }}>
+              As of: {new Date(latestAllowance.snapshot_day).toLocaleDateString()}
             </div>
           </div>
         ),
@@ -167,6 +161,7 @@ app.frame('/check-allowance', async (c) => {
             width: '1200px',
             height: '628px',
             display: 'flex',
+            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
             color: 'white',
@@ -175,10 +170,7 @@ app.frame('/check-allowance', async (c) => {
             textAlign: 'center',
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div>Error fetching data.</div>
-            <div>Please try again later.</div>
-          </div>
+          <div style={{ display: 'flex' }}>Error fetching data. Please try again later.</div>
         </div>
       ),
       intents: [
