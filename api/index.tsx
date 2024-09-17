@@ -1,92 +1,64 @@
-// pages/api/farcaster-data.ts
-import { NextApiRequest, NextApiResponse } from 'next';
-import { DuneClient } from "@duneanalytics/client-sdk";
+// pages/api/degen-allowance.ts
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-export const config = {
-  runtime: 'edge',
-};
-
-interface ProcessedData {
-  dataSource: string;
-  lastUpdated: string;
-  lastUpdateTime: string;
-  status: string;
-  impact: string;
+interface AllowanceData {
+  allowance: number;
+  // Add other properties if the API returns more data
 }
 
-export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
-  try {
-    const dune = new DuneClient(process.env.DUNE_API_KEY || '');
-    const queryResult = await dune.getLatestResult({ queryId: 3610337 });
-
-    if (!queryResult.result?.rows) {
-      throw new Error('No data returned from Dune query');
-    }
-
-    // Process the query result
-    const processedData: ProcessedData[] = queryResult.result.rows.map((row: Record<string, unknown>) => ({
-      dataSource: row['📂 Data Source'] as string,
-      lastUpdated: row['⏳ Last Updated'] as string,
-      lastUpdateTime: row['⌚ Last Update Time (UTC)'] as string,
-      status: row['🚦 Status'] as string,
-      impact: row['💥 Impact'] as string
-    }));
-
-    // Generate HTML for the frame
-    const html = generateFrameHtml(processedData);
-
-    res.setHeader('Content-Type', 'text/html');
-    res.status(200).send(html);
-  } catch (error) {
-    console.error('Error fetching data from Dune:', error);
-    res.status(500).send('Error fetching data');
+async function getTipAllowance(fid: string): Promise<AllowanceData> {
+  const url = `https://www.degen.tips/api/airdrop2/tip-allowance?fid=${fid}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
+  return await response.json();
 }
 
-function generateFrameHtml(data: ProcessedData[]): string {
-  const tableRows = data.map(item => `
-    <tr>
-      <td>${item.dataSource}</td>
-      <td>${item.lastUpdated}</td>
-      <td>${item.lastUpdateTime}</td>
-      <td>${item.status}</td>
-      <td>${item.impact}</td>
-    </tr>
-  `).join('');
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const fid = req.query.fid as string | undefined;
 
-  return `
+  let allowanceData: AllowanceData | null = null;
+  let errorMessage = '';
+
+  if (fid) {
+    try {
+      allowanceData = await getTipAllowance(fid);
+    } catch (error) {
+      console.error('Error fetching allowance:', error);
+      errorMessage = 'Error fetching allowance data';
+    }
+  }
+
+  const html = `
     <!DOCTYPE html>
     <html>
       <head>
         <meta property="fc:frame" content="vNext" />
-        <meta property="fc:frame:image" content="${generateChartImage()}" />
-        <meta property="fc:frame:button:1" content="Refresh" />
-        <style>
-          body { font-family: Arial, sans-serif; }
-          table { border-collapse: collapse; width: 100%; }
-          th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-          th { background-color: #f2f2f2; }
-        </style>
+        <meta property="fc:frame:image" content="${generateImage(allowanceData, errorMessage)}" />
+        <meta property="fc:frame:button:1" content="Check My Allowance" />
+        <meta property="fc:frame:input:text" content="Enter your Farcaster ID" />
       </head>
       <body>
-        <h1>Farcaster Data Freshness</h1>
-        <table>
-          <tr>
-            <th>Data Source</th>
-            <th>Last Updated</th>
-            <th>Last Update Time (UTC)</th>
-            <th>Status</th>
-            <th>Impact</th>
-          </tr>
-          ${tableRows}
-        </table>
+        <h1>$DEGEN Tipping Allowance</h1>
+        ${allowanceData ? `<p>Your current allowance: ${allowanceData.allowance} $DEGEN</p>` : ''}
+        ${errorMessage ? `<p>Error: ${errorMessage}</p>` : ''}
       </body>
     </html>
   `;
+
+  res.setHeader('Content-Type', 'text/html');
+  res.status(200).send(html);
 }
 
-function generateChartImage(): string {
-  // Here you would generate or fetch a chart image based on the data
-  // For this example, we'll just return a placeholder image
-  return "https://via.placeholder.com/1200x630?text=Farcaster+Data+Freshness+Chart";
+function generateImage(allowanceData: AllowanceData | null, errorMessage: string): string {
+  // In a real implementation, you would generate an actual image here.
+  // For this example, we'll return a placeholder URL.
+  const text = allowanceData 
+    ? `Your $DEGEN allowance: ${allowanceData.allowance}`
+    : errorMessage || 'Enter your Farcaster ID to check your $DEGEN allowance';
+  return `https://placehold.co/600x400/1e1e1e/ffffff?text=${encodeURIComponent(text)}`;
 }
