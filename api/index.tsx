@@ -188,9 +188,11 @@ app.frame('/check-allowance', async (c) => {
           >
             <img src={userInfo.profileImage} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%', marginBottom: '20px' }} />
             <div style={{ fontSize: '40px', marginBottom: '20px' }}>{userInfo.profileName}</div>
-            <div>Daily Allowance: {allowanceData.tip_allowance} $DEGEN</div>
-            <div>Remaining Allowance: {allowanceData.remaining_tip_allowance} $DEGEN</div>
-            <div>Rank: {allowanceData.user_rank}</div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div>Daily Allowance: {allowanceData.tip_allowance} $DEGEN</div>
+              <div>Remaining Allowance: {allowanceData.remaining_tip_allowance} $DEGEN</div>
+              <div>Rank: {allowanceData.user_rank}</div>
+            </div>
             <div style={{ fontSize: '24px', marginTop: '20px' }}>As of: {new Date(allowanceData.snapshot_day).toLocaleDateString()}</div>
           </div>
         ),
