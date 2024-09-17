@@ -55,10 +55,17 @@ export default async function handler(
 }
 
 function generateImage(allowanceData: AllowanceData | null, errorMessage: string): string {
-  // In a real implementation, you would generate an actual image here.
-  // For this example, we'll return a placeholder URL.
-  const text = allowanceData 
-    ? `Your $DEGEN allowance: ${allowanceData.allowance}`
-    : errorMessage || 'Enter your Farcaster ID to check your $DEGEN allowance';
-  return `https://placehold.co/600x400/1e1e1e/ffffff?text=${encodeURIComponent(text)}`;
+  const backgroundImage = "https://bafybeig776f35t7q6fybqfe4zup2kmiqychy4rcdncjjl5emahho6rqt6i.ipfs.w3s.link/Thumbnail%20(31).png";
+  
+  let text = 'Enter your Farcaster ID to check your $DEGEN allowance';
+  if (allowanceData) {
+    text = `Your $DEGEN allowance: ${allowanceData.allowance}`;
+  } else if (errorMessage) {
+    text = errorMessage;
+  }
+
+  // Here we're using a service that allows text overlay on images
+  // You might need to adjust or replace this with your own image generation service
+  return `https://img.bruzu.com/?backgroundImage=${encodeURIComponent(backgroundImage)}` +
+         `&width=1200&height=630&fontSize=40&fontColor=white&text=${encodeURIComponent(text)}`;
 }
