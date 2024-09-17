@@ -32,7 +32,7 @@ const app = new Frog({
 
 const AIRSTACK_API_URL = 'https://api.airstack.xyz/gql';
 const AIRSTACK_API_KEY = '103ba30da492d4a7e89e7026a6d3a234e';
-const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/tips';
+const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/tip-allowance'; // Updated API endpoint
 
 async function getUserInfo(fid: string): Promise<UserInfo | null> {
   const query = `
@@ -72,16 +72,19 @@ async function getUserInfo(fid: string): Promise<UserInfo | null> {
 
 async function getAllowanceData(fid: string): Promise<AllowanceData> {
   try {
-    const url = `${DEGEN_TIPS_API_URL}?fid=${fid}&season=season2`;
+    const url = `${DEGEN_TIPS_API_URL}?fid=${fid}`;
+    console.log('Fetching allowance data from:', url);
     const response = await fetch(url);
     if (!response.ok) {
-      console.error('Degen.tips API error:', await response.text());
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      console.error('Degen.tips API error:', errorText);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
     }
     const data = await response.json();
+    console.log('Received data from Degen.tips:', data);
     return {
-      dailyAllowance: data.dailyAllowance,
-      currentAllowance: data.currentAllowance
+      dailyAllowance: data.dailyAllowance || 0,
+      currentAllowance: data.currentAllowance || 0
     };
   } catch (error) {
     console.error('Error in getAllowanceData:', error);
