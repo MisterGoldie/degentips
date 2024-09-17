@@ -12,8 +12,10 @@ interface UserInfo {
 }
 
 interface AllowanceData {
-  dailyAllowance: number;
-  currentAllowance: number;
+  snapshot_day: string;
+  tip_allowance: string;
+  remaining_tip_allowance: string;
+  user_rank: string;
 }
 
 interface AirstackResponse {
@@ -72,7 +74,6 @@ async function getUserInfo(fid: string): Promise<UserInfo | null> {
 
 async function getAllowanceData(fid: string): Promise<AllowanceData | null> {
   try {
-    // Note: We don't have the wallet address, so we're only using the fid
     const url = `${DEGEN_TIPS_API_URL}?fid=${fid}`;
     console.log('Fetching allowance data from:', url);
     const response = await fetch(url);
@@ -84,13 +85,12 @@ async function getAllowanceData(fid: string): Promise<AllowanceData | null> {
     const data = await response.json();
     console.log('Received data from Degen.tips:', data);
     
-    if (data && typeof data === 'object') {
-      return {
-        dailyAllowance: data.dailyAllowance || 0,
-        currentAllowance: data.currentAllowance || 0
-      };
+    if (Array.isArray(data) && data.length > 0) {
+      // Sort the data by snapshot_day in descending order and take the first (most recent) entry
+      const sortedData = data.sort((a, b) => new Date(b.snapshot_day).getTime() - new Date(a.snapshot_day).getTime());
+      return sortedData[0];
     } else {
-      console.log('Unexpected data format received from Degen.tips API');
+      console.log('No allowance data available');
       return null;
     }
   } catch (error) {
@@ -167,7 +167,7 @@ app.frame('/check-allowance', async (c) => {
       })
     ]);
 
-    if (userInfo) {
+    if (userInfo && allowanceData) {
       return c.res({
         image: (
           <div style={{
@@ -179,20 +179,16 @@ app.frame('/check-allowance', async (c) => {
             justifyContent: 'center',
             alignItems: 'center',
             color: 'white',
-            fontSize: '30px',
+            fontSize: '24px',
             fontWeight: 'bold',
             textAlign: 'center',
           }}>
-            <img src={userInfo.profileImage} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%', marginBottom: '20px' }} />
-            <div>{userInfo.profileName}</div>
-            {allowanceData ? (
-              <>
-                <div>Daily Allowance: {allowanceData.dailyAllowance} $DEGEN</div>
-                <div>Current Allowance: {allowanceData.currentAllowance} $DEGEN</div>
-              </>
-            ) : (
-              <div>No allowance data available</div>
-            )}
+            <img src={userInfo.profileImage} alt="Profile" style={{ width: '80px', height: '80px', borderRadius: '50%', marginBottom: '10px' }} />
+            <div style={{ fontSize: '28px', marginBottom: '10px' }}>{userInfo.profileName}</div>
+            <div>Daily Allowance: {allowanceData.tip_allowance} $DEGEN</div>
+            <div>Remaining Allowance: {allowanceData.remaining_tip_allowance} $DEGEN</div>
+            <div>Rank: {allowanceData.user_rank}</div>
+            <div style={{ fontSize: '16px', marginTop: '10px' }}>As of: {new Date(allowanceData.snapshot_day).toLocaleDateString()}</div>
           </div>
         ),
         intents: [
@@ -200,7 +196,7 @@ app.frame('/check-allowance', async (c) => {
         ],
       });
     } else {
-      throw new Error('Failed to fetch user info');
+      throw new Error('Failed to fetch user info or allowance data');
     }
   } catch (error) {
     console.error('Error in check-allowance frame:', error);
