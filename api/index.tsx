@@ -1,18 +1,18 @@
 /** @jsxImportSource frog/jsx */
 
-import { Button, Frog, TextInput } from 'frog'
+import { Button, Frog } from 'frog'
 import { devtools } from 'frog/dev'
 import { handle } from 'frog/next'
 import { serveStatic } from 'frog/serve-static'
-
-interface AllowanceData {
-  allowance: number;
-}
 
 interface UserInfo {
   dappName: string;
   profileName: string;
   profileImage: string;
+}
+
+interface AllowanceData {
+  allowance: number;
 }
 
 interface AirstackResponse {
@@ -32,10 +32,10 @@ const app = new Frog({
 const AIRSTACK_API_URL = 'https://api.airstack.xyz/gql';
 const AIRSTACK_API_KEY = '71332A9D-240D-41E0-8644-31BD70E64036';
 
-async function getUserInfo(username: string): Promise<UserInfo | null> {
+async function getUserInfo(fid: string): Promise<UserInfo | null> {
   const query = `
     query GetUserFidInformation {
-      Socials(input: {filter: {userId: {_eq: "${username}"}}, blockchain: ethereum}) {
+      Socials(input: {filter: {userId: {_eq: "${fid}"}}, blockchain: ethereum}) {
         Social {
           dappName
           profileName
@@ -62,8 +62,8 @@ async function getUserInfo(username: string): Promise<UserInfo | null> {
   return result.data.Socials.Social[0] || null;
 }
 
-async function getTipAllowance(username: string): Promise<AllowanceData> {
-  const url = `https://www.degen.tips/api/airdrop2/tip-allowance?username=${username}`;
+async function getTipAllowance(fid: string): Promise<AllowanceData> {
+  const url = `https://www.degen.tips/api/airdrop2/tip-allowance?fid=${fid}`;
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -88,21 +88,20 @@ app.frame('/', (c) => {
         fontWeight: 'bold',
         textAlign: 'center',
       }}>
-        Enter your Farcaster username to check $DEGEN allowance
+        Check your $DEGEN allowance
       </div>
     ),
     intents: [
-      <TextInput placeholder="Enter your Farcaster username" />,
       <Button action="/check-allowance">Check My Allowance</Button>,
     ],
   })
 })
 
 app.frame('/check-allowance', async (c) => {
-  const username = c.inputText;
   const backgroundImage = "https://bafybeig776f35t7q6fybqfe4zup2kmiqychy4rcdncjjl5emahho6rqt6i.ipfs.w3s.link/Thumbnail%20(31).png";
+  const fid = c.frameData?.fid;
 
-  if (!username) {
+  if (!fid) {
     return c.res({
       image: (
         <div style={{
@@ -117,7 +116,7 @@ app.frame('/check-allowance', async (c) => {
           fontWeight: 'bold',
           textAlign: 'center',
         }}>
-          Please enter a Farcaster username
+          Unable to retrieve user information
         </div>
       ),
       intents: [
@@ -126,9 +125,13 @@ app.frame('/check-allowance', async (c) => {
     });
   }
 
+  const fidString = fid.toString();
+
   try {
-    const userInfo = await getUserInfo(username);
-    const allowanceData = await getTipAllowance(username);
+    const [userInfo, allowanceData] = await Promise.all([
+      getUserInfo(fidString),
+      getTipAllowance(fidString)
+    ]);
 
     if (userInfo && allowanceData) {
       return c.res({
@@ -152,7 +155,7 @@ app.frame('/check-allowance', async (c) => {
           </div>
         ),
         intents: [
-          <Button action="/">Check Another</Button>
+          <Button action="/">Check Again</Button>
         ],
       });
     } else {
