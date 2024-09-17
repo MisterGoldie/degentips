@@ -134,34 +134,7 @@ app.frame('/check-allowance', async (c) => {
 
     if (userInfo && allowanceData) {
       return c.res({
-        image: (
-          <div
-            style={{
-              backgroundImage: `url(${backgroundImage})`,
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              color: 'white',
-              fontSize: '32px',
-              fontWeight: 'bold',
-              textAlign: 'center',
-            }}
-          >
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <img src={userInfo.profileImage} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%', marginBottom: '20px' }} />
-              <div style={{ fontSize: '40px', marginBottom: '20px' }}>{userInfo.profileName}</div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div>Daily Allowance: {allowanceData.tip_allowance} $DEGEN</div>
-              <div>Remaining Allowance: {allowanceData.remaining_tip_allowance} $DEGEN</div>
-              <div>Rank: {allowanceData.user_rank}</div>
-            </div>
-            <div style={{ fontSize: '24px', marginTop: '20px' }}>As of: {new Date(allowanceData.snapshot_day).toLocaleDateString()}</div>
-          </div>
-        ),
+        image: backgroundImage,
         intents: [
           <Button action="/">Check Again</Button>
         ],
