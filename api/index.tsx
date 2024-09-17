@@ -4,6 +4,7 @@ import { Button, Frog } from 'frog'
 import { devtools } from 'frog/dev'
 import { handle } from 'frog/next'
 import { serveStatic } from 'frog/serve-static'
+import { neynar } from 'frog/middlewares'
 
 interface UserInfo {
   dappName: string;
@@ -26,15 +27,21 @@ interface AirstackResponse {
   };
 }
 
-const app = new Frog({
-  assetsPath: '/',
+export const app = new Frog({
   basePath: '/api',
-  title: 'DEGEN Allowance Checker',
-})
+  imageOptions: { width: 1200, height: 628 },
+  title: '$DEGEN tracker',
+}).use(
+  neynar({
+    apiKey: 'NEYNAR_FROG_FM',
+    features: ['interactor', 'cast'],
+  })
+);
 
 const AIRSTACK_API_URL = 'https://api.airstack.xyz/gql';
 const AIRSTACK_API_KEY = '103ba30da492d4a7e89e7026a6d3a234e';
 const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/allowances';
+const backgroundImage = "https://bafybeig776f35t7q6fybqfe4zup2kmiqychy4rcdncjjl5emahho6rqt6i.ipfs.w3s.link/Thumbnail%20(31).png";
 
 async function getUserInfo(fid: string): Promise<UserInfo | null> {
   const query = `
@@ -86,7 +93,6 @@ async function getAllowanceData(fid: string): Promise<AllowanceData | null> {
     console.log('Received data from Degen.tips:', data);
     
     if (Array.isArray(data) && data.length > 0) {
-      // Sort the data by snapshot_day in descending order and take the first (most recent) entry
       const sortedData = data.sort((a, b) => new Date(b.snapshot_day).getTime() - new Date(a.snapshot_day).getTime());
       return sortedData[0];
     } else {
@@ -100,23 +106,25 @@ async function getAllowanceData(fid: string): Promise<AllowanceData | null> {
 }
 
 app.frame('/', (c) => {
-  const backgroundImage = "https://bafybeig776f35t7q6fybqfe4zup2kmiqychy4rcdncjjl5emahho6rqt6i.ipfs.w3s.link/Thumbnail%20(31).png";
-
   return c.res({
     image: (
-      <div style={{
-        backgroundImage: `url(${backgroundImage})`,
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color: 'white',
-        fontSize: '40px',
-        fontWeight: 'bold',
-        textAlign: 'center',
-      }}>
-        Check your $DEGEN allowance
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          width: '1200px',
+          height: '628px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: 'white',
+          fontSize: '48px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+        }}
+      >
+        <div>Check your $DEGEN allowance</div>
+        <div style={{ fontSize: '24px', marginTop: '20px' }}>Click the button below to start</div>
       </div>
     ),
     intents: [
@@ -126,24 +134,25 @@ app.frame('/', (c) => {
 })
 
 app.frame('/check-allowance', async (c) => {
-  const backgroundImage = "https://bafybeig776f35t7q6fybqfe4zup2kmiqychy4rcdncjjl5emahho6rqt6i.ipfs.w3s.link/Thumbnail%20(31).png";
-  const fid = c.frameData?.fid;
+  const { fid } = c.frameData ?? {};
 
   if (!fid) {
     return c.res({
       image: (
-        <div style={{
-          backgroundImage: `url(${backgroundImage})`,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: 'white',
-          fontSize: '40px',
-          fontWeight: 'bold',
-          textAlign: 'center',
-        }}>
+        <div
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            width: '1200px',
+            height: '628px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'white',
+            fontSize: '40px',
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
           Unable to retrieve user information
         </div>
       ),
@@ -153,42 +162,36 @@ app.frame('/check-allowance', async (c) => {
     });
   }
 
-  const fidString = fid.toString();
-
   try {
     const [userInfo, allowanceData] = await Promise.all([
-      getUserInfo(fidString).catch(error => {
-        console.error('Error fetching user info:', error);
-        return null;
-      }),
-      getAllowanceData(fidString).catch(error => {
-        console.error('Error fetching allowance data:', error);
-        return null;
-      })
+      getUserInfo(fid.toString()),
+      getAllowanceData(fid.toString())
     ]);
 
     if (userInfo && allowanceData) {
       return c.res({
         image: (
-          <div style={{
-            backgroundImage: `url(${backgroundImage})`,
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            color: 'white',
-            fontSize: '24px',
-            fontWeight: 'bold',
-            textAlign: 'center',
-          }}>
-            <img src={userInfo.profileImage} alt="Profile" style={{ width: '80px', height: '80px', borderRadius: '50%', marginBottom: '10px' }} />
-            <div style={{ fontSize: '28px', marginBottom: '10px' }}>{userInfo.profileName}</div>
+          <div
+            style={{
+              backgroundImage: `url(${backgroundImage})`,
+              width: '1200px',
+              height: '628px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              color: 'white',
+              fontSize: '32px',
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}
+          >
+            <img src={userInfo.profileImage} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%', marginBottom: '20px' }} />
+            <div style={{ fontSize: '40px', marginBottom: '20px' }}>{userInfo.profileName}</div>
             <div>Daily Allowance: {allowanceData.tip_allowance} $DEGEN</div>
             <div>Remaining Allowance: {allowanceData.remaining_tip_allowance} $DEGEN</div>
             <div>Rank: {allowanceData.user_rank}</div>
-            <div style={{ fontSize: '16px', marginTop: '10px' }}>As of: {new Date(allowanceData.snapshot_day).toLocaleDateString()}</div>
+            <div style={{ fontSize: '24px', marginTop: '20px' }}>As of: {new Date(allowanceData.snapshot_day).toLocaleDateString()}</div>
           </div>
         ),
         intents: [
@@ -202,18 +205,20 @@ app.frame('/check-allowance', async (c) => {
     console.error('Error in check-allowance frame:', error);
     return c.res({
       image: (
-        <div style={{
-          backgroundImage: `url(${backgroundImage})`,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: 'white',
-          fontSize: '40px',
-          fontWeight: 'bold',
-          textAlign: 'center',
-        }}>
+        <div
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            width: '1200px',
+            height: '628px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'white',
+            fontSize: '40px',
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
           Error fetching data. Please try again later.
         </div>
       ),
