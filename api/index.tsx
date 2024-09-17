@@ -52,31 +52,31 @@ async function getAllowanceData(fid: string): Promise<AllowanceData[]> {
   }
 }
 
-app.frame('/', (c) => {
-  return c.res({
-    image: (
-      <div
-        style={{
-          backgroundImage: `url(${backgroundImage})`,
-          width: '1200px',
-          height: '628px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: 'white',
-          fontSize: '48px',
-          fontWeight: 'bold',
-          textAlign: 'center',
-        }}
-      >
-        <div style={{ display: 'flex' }}>Check your $DEGEN allowance</div>
-        <div style={{ display: 'flex', fontSize: '24px', marginTop: '20px' }}>Click the button below to start</div>
-      </div>
-    ),
-    intents: [
-      <Button action="/check-allowance">Check My Allowance</Button>,
-    ],
+app.frame('/', () => {
+  const gifUrl = 'https://bafybeia4atcvnyksmtksjivpjnhbqcjygitebabpcoqsarddk2uhhqbvpy.ipfs.w3s.link/IMG_7980.GIF' // GIF URL link
+  const baseUrl = 'https://degentips-lac.vercel.app/' // Replace with your actual base URL
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>$Degen tipping balance</title>
+      <meta property="fc:frame" content="vNext">
+      <meta property="fc:frame:image" content="${gifUrl}">
+      <meta property="fc:frame:button:1" content="Check stats">
+      <meta property="fc:frame:button:1:action" content="post">
+      <meta property="fc:frame:post_url" content="${baseUrl}/api/check-allowance">
+    </head>
+    <body>
+      <h1>$MOXIE stats V2 Earnings tracker by @goldie. Only viewable on Warpcast. Follow Goldie on Warpcast - https://warpcast.com/goldie </h1>
+    </body>
+    </html>
+  `
+
+  return new Response(html, {
+    headers: { 'Content-Type': 'text/html' },
   })
 })
 
