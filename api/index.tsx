@@ -82,29 +82,12 @@ app.frame('/', () => {
 
 app.frame('/check-allowance', async (c) => {
   const { fid } = c.frameData ?? {};
+  const errorImage = "https://bafybeif5xdeft5mfhofj3zrawmn3ldqkhemukuclndie6pnomusiwn2xoe.ipfs.w3s.link/error%20frame.png";
 
   if (!fid) {
     console.error('No FID provided');
     return c.res({
-      image: (
-        <div
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            width: '1200px',
-            height: '628px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            color: 'white',
-            fontSize: '40px',
-            fontWeight: 'bold',
-            textAlign: 'center',
-          }}
-        >
-          <div style={{ display: 'flex' }}>Unable to retrieve user information: No FID provided</div>
-        </div>
-      ),
+      image: errorImage,
       intents: [
         <Button action="/">Try Again</Button>
       ],
@@ -118,6 +101,16 @@ app.frame('/check-allowance', async (c) => {
     if (allowanceDataArray && allowanceDataArray.length > 0) {
       const latestAllowance = allowanceDataArray[0];
       console.log('Latest Allowance Data:', latestAllowance);
+
+      // Check if the tipping balance is zero
+      if (parseFloat(latestAllowance.remaining_tip_allowance) <= 0) {
+        return c.res({
+          image: errorImage,
+          intents: [
+            <Button action="/">Check Again</Button>
+          ],
+        });
+      }
 
       return c.res({
         image: (
@@ -154,25 +147,7 @@ app.frame('/check-allowance', async (c) => {
   } catch (error) {
     console.error('Error in check-allowance frame:', error);
     return c.res({
-      image: (
-        <div
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            width: '1200px',
-            height: '628px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            color: 'white',
-            fontSize: '40px',
-            fontWeight: 'bold',
-            textAlign: 'center',
-          }}
-        >
-          <div style={{ display: 'flex' }}>Error fetching data. Please try again later.</div>
-        </div>
-      ),
+      image: errorImage,
       intents: [
         <Button action="/">Try Again</Button>
       ],
