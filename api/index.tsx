@@ -26,6 +26,7 @@ export const app = new Frog({
 
 const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/allowances';
 const backgroundImage = "https://bafybeig776f35t7q6fybqfe4zup2kmiqychy4rcdncjjl5emahho6rqt6i.ipfs.w3s.link/Thumbnail%20(31).png";
+const gifUrl = 'https://bafybeia4atcvnyksmtksjivpjnhbqcjygitebabpcoqsarddk2uhhqbvpy.ipfs.w3s.link/IMG_7980.GIF' // GIF URL link
 
 async function getAllowanceData(fid: string): Promise<AllowanceData[]> {
   try {
@@ -70,7 +71,7 @@ app.frame('/', () => {
       <meta property="fc:frame:post_url" content="${baseUrl}/api/check-allowance">
     </head>
     <body>
-      <h1>$MOXIE stats V2 Earnings tracker by @goldie. Only viewable on Warpcast. Follow Goldie on Warpcast - https://warpcast.com/goldie </h1>
+      <h1>$Degen tipping tracker by @goldie. Only viewable on Warpcast. Follow Goldie on Warpcast - https://warpcast.com/goldie </h1>
     </body>
     </html>
   `
@@ -123,7 +124,7 @@ app.frame('/check-allowance', async (c) => {
         image: (
           <div
             style={{
-              backgroundImage: `url(${backgroundImage})`,
+              backgroundImage: `url(${gifUrl})`,
               width: '1200px',
               height: '628px',
               display: 'flex',
