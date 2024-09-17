@@ -186,8 +186,10 @@ app.frame('/check-allowance', async (c) => {
               textAlign: 'center',
             }}
           >
-            <img src={userInfo.profileImage} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%', marginBottom: '20px' }} />
-            <div style={{ fontSize: '40px', marginBottom: '20px' }}>{userInfo.profileName}</div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <img src={userInfo.profileImage} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%', marginBottom: '20px' }} />
+              <div style={{ fontSize: '40px', marginBottom: '20px' }}>{userInfo.profileName}</div>
+            </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div>Daily Allowance: {allowanceData.tip_allowance} $DEGEN</div>
               <div>Remaining Allowance: {allowanceData.remaining_tip_allowance} $DEGEN</div>
