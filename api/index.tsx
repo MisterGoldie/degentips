@@ -101,7 +101,10 @@ app.frame('/check-allowance', async (c) => {
             textAlign: 'center',
           }}
         >
-          Unable to retrieve user information: No FID provided
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div>Unable to retrieve user information:</div>
+            <div>No FID provided</div>
+          </div>
         </div>
       ),
       intents: [
@@ -135,11 +138,15 @@ app.frame('/check-allowance', async (c) => {
               textAlign: 'center',
             }}
           >
-            <div style={{ fontSize: '40px', marginBottom: '20px' }}>Your $DEGEN Allowance</div>
-            <div>Daily Allowance: {latestAllowance.tip_allowance} $DEGEN</div>
-            <div>Remaining Balance: {latestAllowance.remaining_tip_allowance} $DEGEN</div>
-            <div style={{ fontSize: '24px', marginTop: '20px' }}>
-              As of: {new Date(latestAllowance.snapshot_day).toLocaleDateString()}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ fontSize: '40px', marginBottom: '20px' }}>Your $DEGEN Allowance</div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div>Daily Allowance: {latestAllowance.tip_allowance} $DEGEN</div>
+                <div>Remaining Balance: {latestAllowance.remaining_tip_allowance} $DEGEN</div>
+              </div>
+              <div style={{ fontSize: '24px', marginTop: '20px' }}>
+                As of: {new Date(latestAllowance.snapshot_day).toLocaleDateString()}
+              </div>
             </div>
           </div>
         ),
@@ -168,7 +175,10 @@ app.frame('/check-allowance', async (c) => {
             textAlign: 'center',
           }}
         >
-          Error fetching data. Please try again later.
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div>Error fetching data.</div>
+            <div>Please try again later.</div>
+          </div>
         </div>
       ),
       intents: [
