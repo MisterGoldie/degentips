@@ -79,7 +79,7 @@ async function getUserInfo(fid: string): Promise<UserInfo | null> {
   }
 }
 
-async function getAllowanceData(fid: string): Promise<AllowanceData | null> {
+async function getAllowanceData(fid: string): Promise<AllowanceData[]> {
   try {
     const url = `${DEGEN_TIPS_API_URL}?fid=${fid}`;
     console.log('Fetching allowance data from:', url);
@@ -93,11 +93,10 @@ async function getAllowanceData(fid: string): Promise<AllowanceData | null> {
     console.log('Received data from Degen.tips:', data);
     
     if (Array.isArray(data) && data.length > 0) {
-      const sortedData = data.sort((a, b) => new Date(b.snapshot_day).getTime() - new Date(a.snapshot_day).getTime());
-      return sortedData[0];
+      return data.sort((a, b) => new Date(b.snapshot_day).getTime() - new Date(a.snapshot_day).getTime());
     } else {
       console.log('No allowance data available');
-      return null;
+      return [];
     }
   } catch (error) {
     console.error('Error in getAllowanceData:', error);
@@ -137,6 +136,7 @@ app.frame('/check-allowance', async (c) => {
   const { fid } = c.frameData ?? {};
 
   if (!fid) {
+    console.error('No FID provided');
     return c.res({
       image: (
         <div
@@ -153,7 +153,7 @@ app.frame('/check-allowance', async (c) => {
             textAlign: 'center',
           }}
         >
-          Unable to retrieve user information
+          Unable to retrieve user information: No FID provided
         </div>
       ),
       intents: [
@@ -163,12 +163,20 @@ app.frame('/check-allowance', async (c) => {
   }
 
   try {
-    const [userInfo, allowanceData] = await Promise.all([
+    const [userInfo, allowanceDataArray] = await Promise.all([
       getUserInfo(fid.toString()),
       getAllowanceData(fid.toString())
     ]);
 
+    console.log('User Info:', userInfo);
+    console.log('Allowance Data Array:', allowanceDataArray);
+
+    // Get the most recent allowance data (first item in the array)
+    const allowanceData = allowanceDataArray[0];
+
     if (userInfo && allowanceData) {
+      const formattedDate = new Date(allowanceData.snapshot_day).toLocaleDateString();
+      
       return c.res({
         image: (
           <div
@@ -195,7 +203,7 @@ app.frame('/check-allowance', async (c) => {
               <div>Remaining Allowance: {allowanceData.remaining_tip_allowance} $DEGEN</div>
               <div>Rank: {allowanceData.user_rank}</div>
             </div>
-            <div style={{ fontSize: '24px', marginTop: '20px' }}>As of: {new Date(allowanceData.snapshot_day).toLocaleDateString()}</div>
+            <div style={{ fontSize: '24px', marginTop: '20px' }}>As of: {formattedDate}</div>
           </div>
         ),
         intents: [
