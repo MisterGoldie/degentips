@@ -107,7 +107,26 @@ async function getAllowanceData(fid: string): Promise<AllowanceData | null> {
 
 app.frame('/', (c) => {
   return c.res({
-    image: backgroundImage,
+    image: (
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          width: '1200px',
+          height: '628px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: 'white',
+          fontSize: '48px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+        }}
+      >
+        <div>Check your $DEGEN allowance</div>
+        <div style={{ fontSize: '24px', marginTop: '20px' }}>Click the button below to start</div>
+      </div>
+    ),
     intents: [
       <Button action="/check-allowance">Check My Allowance</Button>,
     ],
@@ -120,21 +139,21 @@ app.frame('/check-allowance', async (c) => {
   if (!fid) {
     return c.res({
       image: (
-        <div style={{ 
-          backgroundImage: `url(${backgroundImage})`,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: 'white',
-          fontSize: '32px',
-          fontWeight: 'bold',
-          textAlign: 'center',
-        }}>
-          <div>Unable to retrieve user information.</div>
-          <div>Please try again.</div>
+        <div
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            width: '1200px',
+            height: '628px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'white',
+            fontSize: '40px',
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          Unable to retrieve user information
         </div>
       ),
       intents: [
@@ -152,23 +171,30 @@ app.frame('/check-allowance', async (c) => {
     if (userInfo && allowanceData) {
       return c.res({
         image: (
-          <div style={{ 
-            backgroundImage: `url(${backgroundImage})`,
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            color: 'white',
-            fontSize: '32px',
-            fontWeight: 'bold',
-            textAlign: 'center',
-          }}>
-            <div style={{ fontSize: '40px', marginBottom: '20px' }}>{userInfo.profileName}'s $DEGEN Allowance</div>
-            <div>Daily: {allowanceData.tip_allowance}</div>
-            <div>Remaining: {allowanceData.remaining_tip_allowance}</div>
-            <div>Rank: {allowanceData.user_rank}</div>
+          <div
+            style={{
+              backgroundImage: `url(${backgroundImage})`,
+              width: '1200px',
+              height: '628px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              color: 'white',
+              fontSize: '32px',
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <img src={userInfo.profileImage} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%', marginBottom: '20px' }} />
+              <div style={{ fontSize: '40px', marginBottom: '20px' }}>{userInfo.profileName}</div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div>Daily Allowance: {allowanceData.tip_allowance} $DEGEN</div>
+              <div>Remaining Allowance: {allowanceData.remaining_tip_allowance} $DEGEN</div>
+              <div>Rank: {allowanceData.user_rank}</div>
+            </div>
             <div style={{ fontSize: '24px', marginTop: '20px' }}>As of: {new Date(allowanceData.snapshot_day).toLocaleDateString()}</div>
           </div>
         ),
@@ -183,21 +209,21 @@ app.frame('/check-allowance', async (c) => {
     console.error('Error in check-allowance frame:', error);
     return c.res({
       image: (
-        <div style={{ 
-          backgroundImage: `url(${backgroundImage})`,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: 'white',
-          fontSize: '32px',
-          fontWeight: 'bold',
-          textAlign: 'center',
-        }}>
-          <div>Error fetching data.</div>
-          <div>Please try again.</div>
+        <div
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            width: '1200px',
+            height: '628px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'white',
+            fontSize: '40px',
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          Error fetching data. Please try again later.
         </div>
       ),
       intents: [
