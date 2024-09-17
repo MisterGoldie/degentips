@@ -11,8 +11,9 @@ interface UserInfo {
   profileImage: string;
 }
 
-interface AllowanceData {
-  allowance: number;
+interface TipData {
+  amount: number;
+  // Add other properties as needed
 }
 
 interface AirstackResponse {
@@ -31,6 +32,7 @@ const app = new Frog({
 
 const AIRSTACK_API_URL = 'https://api.airstack.xyz/gql';
 const AIRSTACK_API_KEY = '71332A9D-240D-41E0-8644-31BD70E64036';
+const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/tips';
 
 async function getUserInfo(fid: string): Promise<UserInfo | null> {
   const query = `
@@ -68,17 +70,18 @@ async function getUserInfo(fid: string): Promise<UserInfo | null> {
   }
 }
 
-async function getTipAllowance(fid: string): Promise<AllowanceData> {
+async function getTipData(fid: string, season: string = 'current', limit: number = 10, offset: number = 0): Promise<TipData[]> {
   try {
-    const url = `https://www.degen.tips/api/airdrop2/tip-allowance?fid=${fid}`;
+    const url = `${DEGEN_TIPS_API_URL}?fid=${fid}&season=${season}&limit=${limit}&offset=${offset}`;
     const response = await fetch(url);
     if (!response.ok) {
       console.error('Degen.tips API error:', await response.text());
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return await response.json();
+    const data: TipData[] = await response.json();
+    return data;
   } catch (error) {
-    console.error('Error in getTipAllowance:', error);
+    console.error('Error in getTipData:', error);
     throw error;
   }
 }
@@ -100,16 +103,16 @@ app.frame('/', (c) => {
         fontWeight: 'bold',
         textAlign: 'center',
       }}>
-        Check your $DEGEN allowance
+        Check your $DEGEN tips
       </div>
     ),
     intents: [
-      <Button action="/check-allowance">Check My Allowance</Button>,
+      <Button action="/check-tips">Check My Tips</Button>,
     ],
   })
 })
 
-app.frame('/check-allowance', async (c) => {
+app.frame('/check-tips', async (c) => {
   const backgroundImage = "https://bafybeig776f35t7q6fybqfe4zup2kmiqychy4rcdncjjl5emahho6rqt6i.ipfs.w3s.link/Thumbnail%20(31).png";
   const fid = c.frameData?.fid;
 
@@ -140,18 +143,19 @@ app.frame('/check-allowance', async (c) => {
   const fidString = fid.toString();
 
   try {
-    const [userInfo, allowanceData] = await Promise.all([
+    const [userInfo, tipData] = await Promise.all([
       getUserInfo(fidString).catch(error => {
         console.error('Error fetching user info:', error);
         return null;
       }),
-      getTipAllowance(fidString).catch(error => {
-        console.error('Error fetching allowance:', error);
+      getTipData(fidString).catch(error => {
+        console.error('Error fetching tip data:', error);
         return null;
       })
     ]);
 
-    if (userInfo && allowanceData) {
+    if (userInfo && tipData) {
+      const totalTips = tipData.reduce((sum, tip) => sum + tip.amount, 0);
       return c.res({
         image: (
           <div style={{
@@ -169,7 +173,8 @@ app.frame('/check-allowance', async (c) => {
           }}>
             <img src={userInfo.profileImage} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%', marginBottom: '20px' }} />
             <div>{userInfo.profileName}</div>
-            <div>$DEGEN allowance: {allowanceData.allowance}</div>
+            <div>Total $DEGEN tips: {totalTips}</div>
+            <div>Number of tips: {tipData.length}</div>
           </div>
         ),
         intents: [
@@ -177,10 +182,10 @@ app.frame('/check-allowance', async (c) => {
         ],
       });
     } else {
-      throw new Error('Failed to fetch user info or allowance');
+      throw new Error('Failed to fetch user info or tip data');
     }
   } catch (error) {
-    console.error('Error in check-allowance frame:', error);
+    console.error('Error in check-tips frame:', error);
     return c.res({
       image: (
         <div style={{
