@@ -31,8 +31,8 @@ const app = new Frog({
 })
 
 const AIRSTACK_API_URL = 'https://api.airstack.xyz/gql';
-const AIRSTACK_API_KEY = '103ba30da492d4a7e89e7026a6d3a234e';
-const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/tips';
+const AIRSTACK_API_KEY = '71332A9D-240D-41E0-8644-31BD70E64036';
+const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/allowances';
 
 async function getUserInfo(fid: string): Promise<UserInfo | null> {
   const query = `
@@ -72,27 +72,25 @@ async function getUserInfo(fid: string): Promise<UserInfo | null> {
 
 async function getAllowanceData(fid: string): Promise<AllowanceData | null> {
   try {
-    const url = `${DEGEN_TIPS_API_URL}?fid=${fid}&season=season2&limit=1`;
+    // Note: We don't have the wallet address, so we're only using the fid
+    const url = `${DEGEN_TIPS_API_URL}?fid=${fid}`;
     console.log('Fetching allowance data from:', url);
     const response = await fetch(url);
     if (!response.ok) {
-      if (response.status === 404) {
-        console.log('No allowance data found for this user');
-        return null;
-      }
       const errorText = await response.text();
       console.error('Degen.tips API error:', errorText);
       throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
     }
     const data = await response.json();
     console.log('Received data from Degen.tips:', data);
-    if (Array.isArray(data) && data.length > 0) {
+    
+    if (data && typeof data === 'object') {
       return {
-        dailyAllowance: data[0].dailyAllowance || 0,
-        currentAllowance: data[0].currentAllowance || 0
+        dailyAllowance: data.dailyAllowance || 0,
+        currentAllowance: data.currentAllowance || 0
       };
     } else {
-      console.log('No allowance data found in the response');
+      console.log('Unexpected data format received from Degen.tips API');
       return null;
     }
   } catch (error) {
