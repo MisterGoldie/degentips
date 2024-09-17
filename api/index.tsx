@@ -107,7 +107,26 @@ async function getAllowanceData(fid: string): Promise<AllowanceData | null> {
 
 app.frame('/', (c) => {
   return c.res({
-    image: backgroundImage,
+    image: (
+      <div
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          width: '1200px',
+          height: '628px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: 'white',
+          fontSize: '48px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+        }}
+      >
+        <div>Check your $DEGEN allowance</div>
+        <div style={{ fontSize: '24px', marginTop: '20px' }}>Click the button below to start</div>
+      </div>
+    ),
     intents: [
       <Button action="/check-allowance">Check My Allowance</Button>,
     ],
@@ -119,7 +138,24 @@ app.frame('/check-allowance', async (c) => {
 
   if (!fid) {
     return c.res({
-      image: backgroundImage,
+      image: (
+        <div
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            width: '1200px',
+            height: '628px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'white',
+            fontSize: '40px',
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          Unable to retrieve user information
+        </div>
+      ),
       intents: [
         <Button action="/">Try Again</Button>
       ],
@@ -138,8 +174,8 @@ app.frame('/check-allowance', async (c) => {
           <div
             style={{
               backgroundImage: `url(${backgroundImage})`,
-              width: '100%',
-              height: '100%',
+              width: '1200px',
+              height: '628px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
@@ -172,7 +208,24 @@ app.frame('/check-allowance', async (c) => {
   } catch (error) {
     console.error('Error in check-allowance frame:', error);
     return c.res({
-      image: backgroundImage,
+      image: (
+        <div
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            width: '1200px',
+            height: '628px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'white',
+            fontSize: '40px',
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          Error fetching data. Please try again later.
+        </div>
+      ),
       intents: [
         <Button action="/">Try Again</Button>
       ],
