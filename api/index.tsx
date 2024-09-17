@@ -1,10 +1,20 @@
-// pages/api/degen-allowance.ts
-import type { NextApiRequest, NextApiResponse } from 'next'
+/** @jsxImportSource frog/jsx */
+
+import { Button, Frog, TextInput } from 'frog'
+import { devtools } from 'frog/dev'
+import { handle } from 'frog/next'
+import { serveStatic } from 'frog/serve-static'
 
 interface AllowanceData {
   allowance: number;
   // Add other properties if the API returns more data
 }
+
+const app = new Frog({
+  assetsPath: '/',
+  basePath: '/api',
+  title: 'DEGEN Allowance Checker',
+})
 
 async function getTipAllowance(fid: string): Promise<AllowanceData> {
   const url = `https://www.degen.tips/api/airdrop2/tip-allowance?fid=${fid}`;
@@ -15,57 +25,74 @@ async function getTipAllowance(fid: string): Promise<AllowanceData> {
   return await response.json();
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const fid = req.query.fid as string | undefined;
+app.frame('/', (c) => {
+  const backgroundImage = "https://bafybeig776f35t7q6fybqfe4zup2kmiqychy4rcdncjjl5emahho6rqt6i.ipfs.w3s.link/Thumbnail%20(31).png";
 
-  let allowanceData: AllowanceData | null = null;
-  let errorMessage = '';
+  return c.res({
+    image: (
+      <div style={{
+        backgroundImage: `url(${backgroundImage})`,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'white',
+        fontSize: '40px',
+        fontWeight: 'bold',
+        textAlign: 'center',
+      }}>
+        Check your $DEGEN allowance
+      </div>
+    ),
+    intents: [
+      <TextInput placeholder="Enter your Farcaster ID" />,
+      <Button action="/check-allowance">Check Allowance</Button>,
+    ],
+  })
+})
+
+app.frame('/check-allowance', async (c) => {
+  const { inputText: fid } = c;
+  const backgroundImage = "https://bafybeig776f35t7q6fybqfe4zup2kmiqychy4rcdncjjl5emahho6rqt6i.ipfs.w3s.link/Thumbnail%20(31).png";
+
+  let allowanceText = 'Error fetching allowance data';
 
   if (fid) {
     try {
-      allowanceData = await getTipAllowance(fid);
+      const allowanceData = await getTipAllowance(fid);
+      allowanceText = `Your $DEGEN allowance: ${allowanceData.allowance}`;
     } catch (error) {
       console.error('Error fetching allowance:', error);
-      errorMessage = 'Error fetching allowance data';
     }
+  } else {
+    allowanceText = 'Please enter a valid Farcaster ID';
   }
 
-  const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta property="fc:frame" content="vNext" />
-        <meta property="fc:frame:image" content="${generateImage(allowanceData, errorMessage)}" />
-        <meta property="fc:frame:button:1" content="Check My Allowance" />
-        <meta property="fc:frame:input:text" content="Enter your Farcaster ID" />
-      </head>
-      <body>
-        <h1>$DEGEN Tipping Allowance</h1>
-        ${allowanceData ? `<p>Your current allowance: ${allowanceData.allowance} $DEGEN</p>` : ''}
-        ${errorMessage ? `<p>Error: ${errorMessage}</p>` : ''}
-      </body>
-    </html>
-  `;
+  return c.res({
+    image: (
+      <div style={{
+        backgroundImage: `url(${backgroundImage})`,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'white',
+        fontSize: '40px',
+        fontWeight: 'bold',
+        textAlign: 'center',
+      }}>
+        {allowanceText}
+      </div>
+    ),
+    intents: [
+      <Button action="/">Check Another</Button>
+    ],
+  })
+})
 
-  res.setHeader('Content-Type', 'text/html');
-  res.status(200).send(html);
-}
+devtools(app, { serveStatic })
 
-function generateImage(allowanceData: AllowanceData | null, errorMessage: string): string {
-  const backgroundImage = "https://bafybeig776f35t7q6fybqfe4zup2kmiqychy4rcdncjjl5emahho6rqt6i.ipfs.w3s.link/Thumbnail%20(31).png";
-  
-  let text = 'Enter your Farcaster ID to check your $DEGEN allowance';
-  if (allowanceData) {
-    text = `Your $DEGEN allowance: ${allowanceData.allowance}`;
-  } else if (errorMessage) {
-    text = errorMessage;
-  }
-
-  // Here we're using a service that allows text overlay on images
-  // You might need to adjust or replace this with your own image generation service
-  return `https://img.bruzu.com/?backgroundImage=${encodeURIComponent(backgroundImage)}` +
-         `&width=1200&height=630&fontSize=40&fontColor=white&text=${encodeURIComponent(text)}`;
-}
+export const GET = handle(app)
+export const POST = handle(app)
