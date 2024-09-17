@@ -26,6 +26,8 @@ export const app = new Frog({
 
 const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/allowances';
 const backgroundImage = "https://bafybeiedmcuxwwhimtz7ivvsa7mztnlv5t3fhe7c4jd5b6ocgnmcd52sve.ipfs.w3s.link/check%20frame.png";
+const AIRSTACK_API_URL = 'https://api.airstack.xyz/gql';
+const AIRSTACK_API_KEY = '103ba30da492d4a7e89e7026a6d3a234e';
 
 async function getAllowanceData(fid: string): Promise<AllowanceData[]> {
   try {
@@ -52,9 +54,44 @@ async function getAllowanceData(fid: string): Promise<AllowanceData[]> {
   }
 }
 
+async function getUserInfo(fid: string): Promise<{ dappName: string; profileImage: string } | null> {
+  const query = `
+    query GetUserFidInformation {
+      Socials(input: {filter: {userId: {_eq: "${fid}"}}, blockchain: ethereum}) {
+        Social {
+          dappName
+          profileImage
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await fetch(AIRSTACK_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': AIRSTACK_API_KEY,
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    if (!response.ok) {
+      console.error('Airstack API error:', await response.text());
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result.data.Socials.Social[0] || null;
+  } catch (error) {
+    console.error('Error in getUserInfo:', error);
+    throw error;
+  }
+}
+
 app.frame('/', () => {
-  const gifUrl = 'https://bafybeieu6ofyhh23mmnul7guyei535rzlznodajpiefop4gtq2r36chtfi.ipfs.w3s.link/IMG_7981.GIF' // GIF URL link
-  const baseUrl = 'https://degentips-lac.vercel.app/' // Replace with your actual base URL
+  const gifUrl = 'https://bafybeieu6ofyhh23mmnul7guyei535rzlznodajpiefop4gtq2r36chtfi.ipfs.w3s.link/IMG_7981.GIF'
+  const baseUrl = 'https://degentips-lac.vercel.app/'
 
   const html = `
     <!DOCTYPE html>
@@ -95,14 +132,17 @@ app.frame('/check-allowance', async (c) => {
   }
 
   try {
-    const allowanceDataArray = await getAllowanceData(fid.toString());
+    const [allowanceDataArray, userInfo] = await Promise.all([
+      getAllowanceData(fid.toString()),
+      getUserInfo(fid.toString())
+    ]);
     console.log('Allowance Data Array:', allowanceDataArray);
+    console.log('User Info:', userInfo);
 
-    if (allowanceDataArray && allowanceDataArray.length > 0) {
+    if (allowanceDataArray && allowanceDataArray.length > 0 && userInfo) {
       const latestAllowance = allowanceDataArray[0];
       console.log('Latest Allowance Data:', latestAllowance);
 
-      // Check if the tipping balance is zero
       if (parseFloat(latestAllowance.remaining_tip_allowance) <= 0) {
         return c.res({
           image: errorImage,
@@ -114,26 +154,36 @@ app.frame('/check-allowance', async (c) => {
 
       return c.res({
         image: (
-          <div
-            style={{
-              backgroundImage: `url(${backgroundImage})`,
-              width: '1200px',
-              height: '628px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              color: 'white',
-              fontSize: '32px',
-              fontWeight: 'bold',
-              textAlign: 'center',
-            }}
-          >
-            <div style={{ display: 'flex', fontSize: '40px', marginBottom: '20px' }}>Your $DEGEN Allowance</div>
-            <div style={{ display: 'flex' }}>Daily Allowance: {latestAllowance.tip_allowance} $DEGEN</div>
-            <div style={{ display: 'flex' }}>Remaining Balance: {latestAllowance.remaining_tip_allowance} $DEGEN</div>
-            <div style={{ display: 'flex', fontSize: '24px', marginTop: '20px' }}>
-              As of: {new Date(latestAllowance.snapshot_day).toLocaleDateString()}
+          <div style={{
+            backgroundImage: `url(${backgroundImage})`,
+            width: '1200px',
+            height: '628px',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '20px',
+            color: 'white',
+            fontWeight: 'bold',
+          }}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
+              <span style={{fontSize: '40px'}}>@{userInfo.dappName}</span>
+              <img src={userInfo.profileImage} alt="Profile" style={{width: '100px', height: '100px', borderRadius: '50%'}} />
+            </div>
+            
+            <div style={{marginTop: 'auto', marginBottom: '20px', fontSize: '32px'}}>
+              <div>Daily allowance : {latestAllowance.tip_allowance} $Degen</div>
+              <div>Remaining allowance : {latestAllowance.remaining_tip_allowance} $Degen</div>
+            </div>
+            
+            <div style={{fontSize: '24px', alignSelf: 'flex-end'}}>
+              As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
+                month: 'numeric',
+                day: 'numeric',
+                year: '2-digit',
+                hour: 'numeric',
+                minute: '2-digit',
+                timeZone: 'America/Chicago',
+                hour12: true
+              })} CST
             </div>
           </div>
         ),
@@ -142,7 +192,7 @@ app.frame('/check-allowance', async (c) => {
         ],
       });
     } else {
-      throw new Error('No allowance data available');
+      throw new Error('No allowance data or user info available');
     }
   } catch (error) {
     console.error('Error in check-allowance frame:', error);
