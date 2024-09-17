@@ -45,30 +45,42 @@ async function getUserInfo(fid: string): Promise<UserInfo | null> {
     }
   `;
 
-  const response = await fetch(AIRSTACK_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': AIRSTACK_API_KEY,
-    },
-    body: JSON.stringify({ query }),
-  });
+  try {
+    const response = await fetch(AIRSTACK_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': AIRSTACK_API_KEY,
+      },
+      body: JSON.stringify({ query }),
+    });
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch data from Airstack');
+    if (!response.ok) {
+      console.error('Airstack API error:', await response.text());
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result: AirstackResponse = await response.json();
+    return result.data.Socials.Social[0] || null;
+  } catch (error) {
+    console.error('Error in getUserInfo:', error);
+    throw error;
   }
-
-  const result: AirstackResponse = await response.json();
-  return result.data.Socials.Social[0] || null;
 }
 
 async function getTipAllowance(fid: string): Promise<AllowanceData> {
-  const url = `https://www.degen.tips/api/airdrop2/tip-allowance?fid=${fid}`;
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+  try {
+    const url = `https://www.degen.tips/api/airdrop2/tip-allowance?fid=${fid}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      console.error('Degen.tips API error:', await response.text());
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error in getTipAllowance:', error);
+    throw error;
   }
-  return await response.json();
 }
 
 app.frame('/', (c) => {
@@ -129,8 +141,14 @@ app.frame('/check-allowance', async (c) => {
 
   try {
     const [userInfo, allowanceData] = await Promise.all([
-      getUserInfo(fidString),
-      getTipAllowance(fidString)
+      getUserInfo(fidString).catch(error => {
+        console.error('Error fetching user info:', error);
+        return null;
+      }),
+      getTipAllowance(fidString).catch(error => {
+        console.error('Error fetching allowance:', error);
+        return null;
+      })
     ]);
 
     if (userInfo && allowanceData) {
@@ -159,10 +177,10 @@ app.frame('/check-allowance', async (c) => {
         ],
       });
     } else {
-      throw new Error('User info or allowance not found');
+      throw new Error('Failed to fetch user info or allowance');
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error in check-allowance frame:', error);
     return c.res({
       image: (
         <div style={{
@@ -177,7 +195,7 @@ app.frame('/check-allowance', async (c) => {
           fontWeight: 'bold',
           textAlign: 'center',
         }}>
-          Error fetching user information or allowance
+          Error fetching data. Please try again later.
         </div>
       ),
       intents: [
