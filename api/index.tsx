@@ -32,7 +32,7 @@ const app = new Frog({
 
 const AIRSTACK_API_URL = 'https://api.airstack.xyz/gql';
 const AIRSTACK_API_KEY = '103ba30da492d4a7e89e7026a6d3a234e';
-const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/tip-allowance'; // Updated API endpoint
+const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/tips';
 
 async function getUserInfo(fid: string): Promise<UserInfo | null> {
   const query = `
@@ -70,22 +70,31 @@ async function getUserInfo(fid: string): Promise<UserInfo | null> {
   }
 }
 
-async function getAllowanceData(fid: string): Promise<AllowanceData> {
+async function getAllowanceData(fid: string): Promise<AllowanceData | null> {
   try {
-    const url = `${DEGEN_TIPS_API_URL}?fid=${fid}`;
+    const url = `${DEGEN_TIPS_API_URL}?fid=${fid}&season=season2&limit=1`;
     console.log('Fetching allowance data from:', url);
     const response = await fetch(url);
     if (!response.ok) {
+      if (response.status === 404) {
+        console.log('No allowance data found for this user');
+        return null;
+      }
       const errorText = await response.text();
       console.error('Degen.tips API error:', errorText);
       throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
     }
     const data = await response.json();
     console.log('Received data from Degen.tips:', data);
-    return {
-      dailyAllowance: data.dailyAllowance || 0,
-      currentAllowance: data.currentAllowance || 0
-    };
+    if (Array.isArray(data) && data.length > 0) {
+      return {
+        dailyAllowance: data[0].dailyAllowance || 0,
+        currentAllowance: data[0].currentAllowance || 0
+      };
+    } else {
+      console.log('No allowance data found in the response');
+      return null;
+    }
   } catch (error) {
     console.error('Error in getAllowanceData:', error);
     throw error;
@@ -160,7 +169,7 @@ app.frame('/check-allowance', async (c) => {
       })
     ]);
 
-    if (userInfo && allowanceData) {
+    if (userInfo) {
       return c.res({
         image: (
           <div style={{
@@ -178,8 +187,14 @@ app.frame('/check-allowance', async (c) => {
           }}>
             <img src={userInfo.profileImage} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%', marginBottom: '20px' }} />
             <div>{userInfo.profileName}</div>
-            <div>Daily Allowance: {allowanceData.dailyAllowance} $DEGEN</div>
-            <div>Current Allowance: {allowanceData.currentAllowance} $DEGEN</div>
+            {allowanceData ? (
+              <>
+                <div>Daily Allowance: {allowanceData.dailyAllowance} $DEGEN</div>
+                <div>Current Allowance: {allowanceData.currentAllowance} $DEGEN</div>
+              </>
+            ) : (
+              <div>No allowance data available</div>
+            )}
           </div>
         ),
         intents: [
@@ -187,7 +202,7 @@ app.frame('/check-allowance', async (c) => {
         ],
       });
     } else {
-      throw new Error('Failed to fetch user info or allowance data');
+      throw new Error('Failed to fetch user info');
     }
   } catch (error) {
     console.error('Error in check-allowance frame:', error);
