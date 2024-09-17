@@ -25,7 +25,7 @@ export const app = new Frog({
 );
 
 const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/allowances';
-const backgroundImage = "https://bafybeif5xdeft5mfhofj3zrawmn3ldqkhemukuclndie6pnomusiwn2xoe.ipfs.w3s.link/error%20frame.png";
+const backgroundImage = "https://bafybeiedmcuxwwhimtz7ivvsa7mztnlv5t3fhe7c4jd5b6ocgnmcd52sve.ipfs.w3s.link/check%20frame.png";
 const AIRSTACK_API_URL = 'https://api.airstack.xyz/gql';
 const AIRSTACK_API_KEY = '103ba30da492d4a7e89e7026a6d3a234e';
 
@@ -172,13 +172,19 @@ app.frame('/check-allowance', async (c) => {
             fontWeight: 'bold',
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
-              <span style={{fontSize: '40px'}}>@{userInfo.dappName}</span>
+              <span style={{fontSize: '40px'}}>@{userInfo.dappName.toLowerCase()}</span>
               <img src={userInfo.profileImage} alt="Profile" style={{width: '100px', height: '100px', borderRadius: '50%'}} />
             </div>
             
-            <div style={{display: 'flex', flexDirection: 'column', marginTop: 'auto', marginBottom: '20px', fontSize: '32px'}}>
-              <div style={{display: 'flex'}}>Daily allowance : {latestAllowance.tip_allowance} $Degen</div>
-              <div style={{display: 'flex'}}>Remaining allowance : {latestAllowance.remaining_tip_allowance} $Degen</div>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '32px'}}>
+              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+                <span style={{marginRight: '10px'}}>Daily allowance :</span>
+                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.tip_allowance} $Degen</span>
+              </div>
+              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+                <span style={{marginRight: '10px'}}>Remaining allowance :</span>
+                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
+              </div>
             </div>
             
             <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end'}}>
