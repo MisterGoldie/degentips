@@ -53,7 +53,7 @@ async function getAllowanceData(fid: string): Promise<AllowanceData[]> {
 }
 
 app.frame('/', () => {
-  const gifUrl = 'https://bafybeia4atcvnyksmtksjivpjnhbqcjygitebabpcoqsarddk2uhhqbvpy.ipfs.w3s.link/IMG_7980.GIF' // GIF URL link
+  const gifUrl = 'https://bafybeieu6ofyhh23mmnul7guyei535rzlznodajpiefop4gtq2r36chtfi.ipfs.w3s.link/IMG_7981.GIF' // GIF URL link
   const baseUrl = 'https://degentips-lac.vercel.app/' // Replace with your actual base URL
 
   const html = `
