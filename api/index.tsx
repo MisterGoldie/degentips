@@ -308,17 +308,23 @@ app.frame('/share', async (c) => {
             fontWeight: 'bold',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
           }}>
-            <div style={{fontSize: '48px', marginBottom: '20px'}}>
-              $DEGEN Tipping Stats for @{userInfo.profileName}
-            </div>
-            <div style={{fontSize: '36px', marginBottom: '10px'}}>
-              Daily Allowance: {latestAllowance.tip_allowance} $DEGEN
-            </div>
-            <div style={{fontSize: '36px', marginBottom: '10px'}}>
-              Remaining: {latestAllowance.remaining_tip_allowance} $DEGEN
-            </div>
-            <div style={{fontSize: '24px', marginTop: 'auto'}}>
-              Check your $DEGEN tipping stats with @goldie's frame!
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1,
+            }}>
+              <div style={{fontSize: '48px', marginBottom: '20px'}}>
+                $DEGEN Tipping Stats for @{userInfo.profileName}
+              </div>
+              <div style={{fontSize: '36px', marginBottom: '10px'}}>
+                Daily Allowance: {latestAllowance.tip_allowance} $DEGEN
+              </div>
+              <div style={{fontSize: '36px', marginBottom: '10px'}}>
+                Remaining: {latestAllowance.remaining_tip_allowance} $DEGEN
+              </div>
+              <div style={{fontSize: '24px', marginTop: 'auto'}}>
+                Check your $DEGEN tipping stats with @goldie's frame!
+              </div>
             </div>
           </div>
         ),
