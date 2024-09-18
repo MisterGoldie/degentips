@@ -109,7 +109,7 @@ app.frame('/', () => {
       <title>$Degen tipping balance</title>
       <meta property="fc:frame" content="vNext">
       <meta property="fc:frame:image" content="${gifUrl}">
-      <meta property="fc:frame:button:1" content="Check allowance">
+      <meta property="fc:frame:button:1" content="Check stats">
       <meta property="fc:frame:button:1:action" content="post">
       <meta property="fc:frame:post_url" content="${baseUrl}/api/check-allowance">
     </head>
