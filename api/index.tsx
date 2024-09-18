@@ -145,6 +145,7 @@ app.frame('/check-allowance', async (c) => {
             fontSize: '40px',
             fontWeight: 'bold',
             textAlign: 'center',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
           }}
         >
           <div style={{ display: 'flex' }}>Unable to retrieve user information: No FID provided</div>
@@ -184,11 +185,12 @@ app.frame('/check-allowance', async (c) => {
             padding: '20px',
             color: 'white',
             fontWeight: 'bold',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
               <div style={{display: 'flex', flexDirection: 'column'}}>
-                <span style={{fontSize: '80px'}}>@{userInfo.profileName}</span>
-                <span style={{fontSize: '30px'}}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
+                <span style={{fontSize: '80px', textShadow: '3px 3px 6px rgba(0,0,0,0.5)'}}>@{userInfo.profileName}</span>
+                <span style={{fontSize: '30px', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
               </div>
               <img src={userInfo.profileImage} alt="Profile" style={{width: '240px', height: '240px', borderRadius: '50%'}} />
             </div>
@@ -204,7 +206,7 @@ app.frame('/check-allowance', async (c) => {
               </div>
             </div>
             
-            <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end'}}>
+            <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
               As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
                 month: 'numeric',
                 day: 'numeric',
@@ -240,6 +242,7 @@ app.frame('/check-allowance', async (c) => {
             fontSize: '40px',
             fontWeight: 'bold',
             textAlign: 'center',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
           }}
         >
           <div style={{ display: 'flex' }}>Error fetching data. Please try again later.</div>
