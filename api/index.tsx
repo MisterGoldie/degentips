@@ -121,6 +121,8 @@ app.frame('/', () => {
 
 app.frame('/check-allowance', async (c) => {
   const { fid } = c.frameData ?? {};
+  const gifBackground = "https://bafybeighim2jj5yiozgcbxqkdedqngjmeyek6nbqigtini7ta5obh2m274.ipfs.w3s.link/IMG_8014.GIF";
+  const errorBackgroundImage = "https://bafybeihwaijt5lknkz3c2up5uq5ci3gzfyga3gpgb4mv73cmktfvsf7mku.ipfs.w3s.link/error%20frame%20(1).png";
 
   if (!fid) {
     console.error('No FID provided');
@@ -161,13 +163,12 @@ app.frame('/check-allowance', async (c) => {
       const latestAllowance = allowanceDataArray[0];
       console.log('Latest Allowance Data:', latestAllowance);
 
-      const hasZeroBalance = parseFloat(latestAllowance.remaining_tip_allowance) <= 0 && parseFloat(latestAllowance.tip_allowance) > 0;
-      const currentBackgroundImage = hasZeroBalance ? zeroBalanceImage : backgroundImage;
-
       return c.res({
         image: (
           <div style={{
-            backgroundImage: `url(${currentBackgroundImage})`,
+            backgroundImage: `url(${gifBackground})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
             width: '1200px',
             height: '628px',
             display: 'flex',
@@ -177,22 +178,22 @@ app.frame('/check-allowance', async (c) => {
             fontWeight: 'bold',
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
-              <span style={{fontSize: '80px'}}>@{userInfo.profileName}</span>
-              <img src={userInfo.profileImage} alt="Profile" style={{width: '240px', height: '240px', borderRadius: '50%'}} />
+              <span style={{fontSize: '40px'}}>@{userInfo.profileName}</span>
+              <img src={userInfo.profileImage} alt="Profile" style={{width: '100px', height: '100px', borderRadius: '50%'}} />
             </div>
             
-            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '33px'}}>
-              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: '40px', marginLeft: '40px', fontSize: '32px'}}>
+              <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%'}}>
                 <span style={{marginRight: '10px'}}>Daily allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.tip_allowance} $Degen</span>
+                <span style={{fontWeight: '900', minWidth: '150px'}}>{latestAllowance.tip_allowance} $Degen</span>
               </div>
-              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+              <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%'}}>
                 <span style={{marginRight: '10px'}}>Remaining allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
+                <span style={{fontWeight: '900', minWidth: '150px'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
               </div>
             </div>
             
-            <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end'}}>
+            <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end', marginTop: 'auto'}}>
               As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
                 month: 'numeric',
                 day: 'numeric',
