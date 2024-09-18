@@ -1,9 +1,7 @@
 /** @jsxImportSource frog/jsx */
 
 import { Button, Frog } from 'frog'
-import { devtools } from 'frog/dev'
 import { handle } from 'frog/next'
-import { serveStatic } from 'frog/serve-static'
 import { neynar } from 'frog/middlewares'
 
 interface AllowanceData {
@@ -174,11 +172,11 @@ app.frame('/check-allowance', async (c) => {
         ? zeroBalanceImage 
         : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
 
-      // Create the share URL
-      const shareUrl = `https://degentips-lac.vercel.app/api/share?fid=${fid}&dailyAllowance=${latestAllowance.tip_allowance}&remainingAllowance=${latestAllowance.remaining_tip_allowance}&userRank=${latestAllowance.user_rank}&username=${userInfo.profileName}`;
-      
       // Create the share text
-      const shareText = `Check out my $DEGEN tipping stats!`;
+      const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
+
+      // Create the share URL (this should point to your frame's entry point)
+      const shareUrl = `https://degentips-lac.vercel.app/api`;
 
       // Create the Farcaster share URL
       const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
@@ -270,8 +268,6 @@ app.frame('/check-allowance', async (c) => {
     });
   }
 })
-
-devtools(app, { serveStatic })
 
 export const GET = handle(app)
 export const POST = handle(app)
