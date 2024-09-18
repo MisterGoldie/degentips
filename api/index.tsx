@@ -56,12 +56,12 @@ async function getAllowanceData(fid: string): Promise<AllowanceData[]> {
   }
 }
 
-async function getUserInfo(fid: string): Promise<{ dappName: string; profileImage: string } | null> {
+async function getUserInfo(fid: string): Promise<{ profileName: string; profileImage: string } | null> {
   const query = `
-    query GetUserFidInformation {
+    query GetUserProfile {
       Socials(input: {filter: {userId: {_eq: "${fid}"}}, blockchain: ethereum}) {
         Social {
-          dappName
+          profileName
           profileImage
         }
       }
@@ -177,7 +177,7 @@ app.frame('/check-allowance', async (c) => {
             fontWeight: 'bold',
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
-              <span style={{fontSize: '40px'}}>@{userInfo.dappName.toLowerCase()}</span>
+              <span style={{fontSize: '40px'}}>@{userInfo.profileName}</span>
               <img src={userInfo.profileImage} alt="Profile" style={{width: '100px', height: '100px', borderRadius: '50%'}} />
             </div>
             
