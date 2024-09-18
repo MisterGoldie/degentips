@@ -1,7 +1,7 @@
 /** @jsxImportSource frog/jsx */
 
 import { Button, Frog } from 'frog'
-import { handle } from 'frog/next'
+import { handle } from 'frog/vercel'
 import { neynar } from 'frog/middlewares'
 
 interface AllowanceData {
@@ -172,15 +172,6 @@ app.frame('/check-allowance', async (c) => {
         ? zeroBalanceImage 
         : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
 
-      // Create the share text
-      const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
-
-      // Create the share URL (this should point to your frame's entry point)
-      const shareUrl = `https://degentips-lac.vercel.app/api`;
-
-      // Create the Farcaster share URL
-      const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
-
       return c.res({
         image: (
           <div style={{
@@ -234,7 +225,7 @@ app.frame('/check-allowance', async (c) => {
         intents: [
           <Button action="/check-allowance">Refresh Balance</Button>,
           <Button action="/">Back to Home</Button>,
-          <Button.Link href={farcasterShareURL}>Share</Button.Link>,
+          <Button action="/share">Share Stats</Button>,
         ],
       });
     } else {
@@ -269,5 +260,99 @@ app.frame('/check-allowance', async (c) => {
   }
 })
 
-export const GET = handle(app)
-export const POST = handle(app)
+app.frame('/share', async (c) => {
+  const { fid } = c.frameData ?? {};
+
+  if (!fid) {
+    return c.res({
+      image: (
+        <div style={{
+          backgroundImage: `url(${errorBackgroundImage})`,
+          width: '1200px',
+          height: '628px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: 'white',
+          fontSize: '40px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+        }}>
+          <div>Unable to retrieve user information: No FID provided</div>
+        </div>
+      ),
+      intents: [<Button action="/">Back to Home</Button>],
+    });
+  }
+
+  try {
+    const [allowanceDataArray, userInfo] = await Promise.all([
+      getAllowanceData(fid.toString()),
+      getUserInfo(fid.toString())
+    ]);
+
+    if (allowanceDataArray && allowanceDataArray.length > 0 && userInfo) {
+      const latestAllowance = allowanceDataArray[0];
+
+      return c.res({
+        image: (
+          <div style={{
+            backgroundImage: `url(${backgroundImages[0]})`,
+            width: '1200px',
+            height: '628px',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '20px',
+            color: 'white',
+            fontWeight: 'bold',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+          }}>
+            <div style={{fontSize: '48px', marginBottom: '20px'}}>
+              $DEGEN Tipping Stats for @{userInfo.profileName}
+            </div>
+            <div style={{fontSize: '36px', marginBottom: '10px'}}>
+              Daily Allowance: {latestAllowance.tip_allowance} $DEGEN
+            </div>
+            <div style={{fontSize: '36px', marginBottom: '10px'}}>
+              Remaining: {latestAllowance.remaining_tip_allowance} $DEGEN
+            </div>
+            <div style={{fontSize: '24px', marginTop: 'auto'}}>
+              Check your $DEGEN tipping stats with @goldie's frame!
+            </div>
+          </div>
+        ),
+        intents: [
+          <Button action="/">Check Your Stats</Button>,
+        ],
+      });
+    } else {
+      throw new Error('No allowance data or user info available');
+    }
+  } catch (error) {
+    console.error('Error in share frame:', error);
+    return c.res({
+      image: (
+        <div style={{
+          backgroundImage: `url(${errorBackgroundImage})`,
+          width: '1200px',
+          height: '628px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: 'white',
+          fontSize: '40px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+        }}>
+          <div>Error fetching data. Please try again later.</div>
+        </div>
+      ),
+      intents: [<Button action="/">Back to Home</Button>],
+    });
+  }
+});
+
+export const GET = handle(app);
+export const POST = handle(app);
