@@ -14,7 +14,7 @@ interface AllowanceData {
 export const app = new Frog({
   basePath: '/api',
   imageOptions: { width: 1200, height: 628 },
-  title: '$DEGEN tracker',
+  title: '$DEGEN Dave tracker',
 }).use(
   neynar({
     apiKey: 'NEYNAR_FROG_FM',
@@ -96,21 +96,6 @@ async function getUserInfo(fid: string): Promise<{ profileName: string; profileI
   }
 }
 
-async function getTotalReceivedTips(fid: string): Promise<string> {
-  try {
-    const url = `${DEGEN_TIPS_API_URL}/total-received?fid=${fid}`; // Adjust the endpoint as needed
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data.totalReceived || '0';
-  } catch (error) {
-    console.error('Error fetching total received tips:', error);
-    return '0';
-  }
-}
-
 app.frame('/', () => {
   const gifUrl = 'https://bafybeiebmg56vpvwrbsa3znglzj4xv3mwlpzcrgyuydcdsscs2cqbf4rju.ipfs.w3s.link/IMG_8003.GIF'
   const baseUrl = 'https://degentips-lac.vercel.app/'
@@ -129,7 +114,7 @@ app.frame('/', () => {
       <meta property="fc:frame:post_url" content="${baseUrl}/api/check-allowance">
     </head>
     <body>
-      <h1>$Degen tipping tracker by @goldie. Only viewable on Warpcast. Follow Goldie on Warpcast - https://warpcast.com/goldie </h1>
+      <h1>$Degen Dave tipping tracker by @goldie. Only viewable on Warpcast. Follow Goldie on Warpcast - https://warpcast.com/goldie </h1>
     </body>
     </html>
   `
@@ -171,14 +156,12 @@ app.frame('/check-allowance', async (c) => {
   }
 
   try {
-    const [allowanceDataArray, userInfo, totalReceived] = await Promise.all([
+    const [allowanceDataArray, userInfo] = await Promise.all([
       getAllowanceData(fid.toString()),
-      getUserInfo(fid.toString()),
-      getTotalReceivedTips(fid.toString())
+      getUserInfo(fid.toString())
     ]);
     console.log('Allowance Data Array:', allowanceDataArray);
     console.log('User Info:', userInfo);
-    console.log('Total Received Tips:', totalReceived);
 
     if (allowanceDataArray && allowanceDataArray.length > 0 && userInfo) {
       const latestAllowance = allowanceDataArray[0];
@@ -189,8 +172,10 @@ app.frame('/check-allowance', async (c) => {
         ? zeroBalanceImage 
         : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
 
+      
+
       // Create the share text
-      const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}, Total Received This Season: ${totalReceived}. Check yours with @goldie's frame!`;
+      const shareText = `Degen Dave's daily tipping stats🎩. Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
 
       // Create the share URL (this should point to your frame's entry point)
       const shareUrl = `https://degentips-lac.vercel.app/api`;
@@ -233,10 +218,6 @@ app.frame('/check-allowance', async (c) => {
                 <span style={{marginRight: '10px'}}>Remaining allowance :</span>
                 <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
               </div>
-              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-                <span style={{marginRight: '10px'}}>Total Received This Season :</span>
-                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{totalReceived} $Degen</span>
-              </div>
             </div>
             
             <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
@@ -253,9 +234,9 @@ app.frame('/check-allowance', async (c) => {
           </div>
         ),
         intents: [
-          <Button action="/check-allowance">Refresh Balance</Button>,
-          <Button action="/">Back to Home</Button>,
-          <Button.Link href={farcasterShareURL}>Share Stats</Button.Link>,
+          <Button action="/">Home</Button>,
+          <Button action="/check-allowance">Refresh</Button>,
+          <Button.Link href={farcasterShareURL}>Share</Button.Link>,
         ],
       });
     } else {
@@ -280,15 +261,15 @@ app.frame('/check-allowance', async (c) => {
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
           }}
         >
-          <div style={{ display: 'flex' }}>Error fetching data. Please try again later.</div>
+          <div style={{ display: 'flex' }}>Error, or you don't have an allowance</div>
         </div>
       ),
       intents: [
-        <Button action="/">Try Again</Button>
+        <Button action="/">Sorry</Button>
       ],
     });
   }
-})
+});
 
 app.frame('/share', async (c) => {
   const { fid } = c.frameData ?? {};
@@ -317,10 +298,9 @@ app.frame('/share', async (c) => {
   }
 
   try {
-    const [allowanceDataArray, userInfo, totalReceived] = await Promise.all([
+    const [allowanceDataArray, userInfo] = await Promise.all([
       getAllowanceData(fid.toString()),
-      getUserInfo(fid.toString()),
-      getTotalReceivedTips(fid.toString())
+      getUserInfo(fid.toString())
     ]);
 
     if (allowanceDataArray && allowanceDataArray.length > 0 && userInfo) {
@@ -330,7 +310,7 @@ app.frame('/share', async (c) => {
       const shareBackgroundImage = "https://bafybeidhdqc3vwqfgzharotwqbsvgd5wuhyltpjywy2hvyqhtm7laovihm.ipfs.w3s.link/check%20frame%204.png";
 
       // Create the share text
-      const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}, Total Received This Season: ${totalReceived}. Check yours with @goldie's frame!`;
+      const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
 
       // Create the share URL (this should point to your frame's entry point)
       const shareUrl = `https://degentips-lac.vercel.app/api`;
@@ -364,9 +344,6 @@ app.frame('/share', async (c) => {
               </div>
               <div style={{fontSize: '36px', marginBottom: '10px'}}>
                 Remaining: {latestAllowance.remaining_tip_allowance} $DEGEN
-              </div>
-              <div style={{fontSize: '36px', marginBottom: '10px'}}>
-                Total Received This Season: {totalReceived} $DEGEN
               </div>
               <div style={{fontSize: '24px', marginTop: 'auto'}}>
                 Check your $DEGEN tipping stats with @goldie's frame!
@@ -407,6 +384,5 @@ app.frame('/share', async (c) => {
   }
 });
 
-// The ending of the code remains the same
 export const GET = handle(app);
 export const POST = handle(app);
