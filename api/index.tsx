@@ -177,22 +177,22 @@ app.frame('/check-allowance', async (c) => {
             fontWeight: 'bold',
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
-              <span style={{fontSize: '80px'}}>@{userInfo.profileName}</span>
-              <img src={userInfo.profileImage} alt="Profile" style={{width: '260px', height: '260px', borderRadius: '50%'}} />
+              <span style={{fontSize: '40px'}}>@{userInfo.profileName}</span>
+              <img src={userInfo.profileImage} alt="Profile" style={{width: '100px', height: '100px', borderRadius: '50%'}} />
             </div>
             
-            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '33px'}}>
-              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: '40px', marginLeft: '40px', fontSize: '32px'}}>
+              <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%'}}>
                 <span style={{marginRight: '10px'}}>Daily allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.tip_allowance} $Degen</span>
+                <span style={{fontWeight: '900', minWidth: '150px'}}>{latestAllowance.tip_allowance} $Degen</span>
               </div>
-              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+              <div style={{display: 'flex', justifyContent: 'flex-start', width: '100%'}}>
                 <span style={{marginRight: '10px'}}>Remaining allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
+                <span style={{fontWeight: '900', minWidth: '150px'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
               </div>
             </div>
             
-            <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end'}}>
+            <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end', marginTop: 'auto'}}>
               As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
                 month: 'numeric',
                 day: 'numeric',
