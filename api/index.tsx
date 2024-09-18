@@ -196,7 +196,7 @@ app.frame('/check-allowance', async (c) => {
                 width: '240px', 
                 height: '240px', 
                 borderRadius: '50%',
-                border: '4px solid black'  // Added black border
+                border: '4px solid white' 
               }} />
             </div>
             
