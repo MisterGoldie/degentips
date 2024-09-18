@@ -25,7 +25,7 @@ export const app = new Frog({
 );
 
 const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/allowances';
-const backgroundImage = "https://bafybeidhdqc3vwqfgzharotwqbsvgd5wuhyltpjywy2hvyqhtm7laovihm.ipfs.w3s.link/check%20frame%204.png";
+const backgroundImage = "https://bafybeighim2jj5yiozgcbxqkdedqngjmeyek6nbqigtini7ta5obh2m274.ipfs.w3s.link/IMG_8014.GIF";
 const zeroBalanceImage = "https://bafybeif5xdeft5mfhofj3zrawmn3ldqkhemukuclndie6pnomusiwn2xoe.ipfs.w3s.link/error%20frame.png";
 const errorBackgroundImage = "https://bafybeibrve55mf2l6mso53ssps75qato22s74zsvuaaqvnowi32divdqfu.ipfs.w3s.link/error%20frame%20(2).png";
 const AIRSTACK_API_URL = 'https://api.airstack.xyz/gql';
