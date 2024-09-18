@@ -172,6 +172,8 @@ app.frame('/check-allowance', async (c) => {
         ? zeroBalanceImage 
         : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
 
+      
+
       // Create the share text
       const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
 
@@ -304,6 +306,9 @@ app.frame('/share', async (c) => {
     if (allowanceDataArray && allowanceDataArray.length > 0 && userInfo) {
       const latestAllowance = allowanceDataArray[0];
 
+      // Use the same specific background for sharing
+      const shareBackgroundImage = "https://bafybeidhdqc3vwqfgzharotwqbsvgd5wuhyltpjywy2hvyqhtm7laovihm.ipfs.w3s.link/check%20frame%204.png";
+
       // Create the share text
       const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
 
@@ -316,7 +321,7 @@ app.frame('/share', async (c) => {
       return c.res({
         image: (
           <div style={{
-            backgroundImage: `url(${backgroundImages[0]})`,
+            backgroundImage: `url(${shareBackgroundImage})`,
             width: '1200px',
             height: '628px',
             display: 'flex',
