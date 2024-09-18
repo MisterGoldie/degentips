@@ -174,6 +174,15 @@ app.frame('/check-allowance', async (c) => {
         ? zeroBalanceImage 
         : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
 
+      // Create the share URL
+      const shareUrl = `https://degentips-lac.vercel.app/api/share?fid=${fid}&dailyAllowance=${latestAllowance.tip_allowance}&remainingAllowance=${latestAllowance.remaining_tip_allowance}&userRank=${latestAllowance.user_rank}&username=${userInfo.profileName}`;
+      
+      // Create the share text
+      const shareText = `Check out my $DEGEN tipping stats!`;
+
+      // Create the Farcaster share URL
+      const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
+
       return c.res({
         image: (
           <div style={{
@@ -225,8 +234,9 @@ app.frame('/check-allowance', async (c) => {
           </div>
         ),
         intents: [
-          <Button action="/">Home</Button>,
-          <Button action="/check-allowance">Refresh</Button>
+          <Button action="/check-allowance">Refresh Balance</Button>,
+          <Button action="/">Back to Home</Button>,
+          <Button.Link href={farcasterShareURL}>Share</Button.Link>,
         ],
       });
     } else {
@@ -260,6 +270,7 @@ app.frame('/check-allowance', async (c) => {
     });
   }
 })
+
 devtools(app, { serveStatic })
 
 export const GET = handle(app)
