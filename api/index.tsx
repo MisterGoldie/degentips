@@ -14,7 +14,7 @@ interface AllowanceData {
 export const app = new Frog({
   basePath: '/api',
   imageOptions: { width: 1200, height: 628 },
-  title: '$DEGEN tracker',
+  title: '$DEGEN Dave tracker',
 }).use(
   neynar({
     apiKey: 'NEYNAR_FROG_FM',
@@ -114,7 +114,7 @@ app.frame('/', () => {
       <meta property="fc:frame:post_url" content="${baseUrl}/api/check-allowance">
     </head>
     <body>
-      <h1>$Degen tipping tracker by @goldie. Only viewable on Warpcast. Follow Goldie on Warpcast - https://warpcast.com/goldie </h1>
+      <h1>$Degen Dave tipping tracker by @goldie. Only viewable on Warpcast. Follow Goldie on Warpcast - https://warpcast.com/goldie </h1>
     </body>
     </html>
   `
@@ -175,7 +175,7 @@ app.frame('/check-allowance', async (c) => {
       
 
       // Create the share text
-      const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
+      const shareText = `Degen Dave's daily tipping stats🎩. Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
 
       // Create the share URL (this should point to your frame's entry point)
       const shareUrl = `https://degentips-lac.vercel.app/api`;
