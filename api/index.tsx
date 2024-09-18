@@ -261,7 +261,7 @@ app.frame('/check-allowance', async (c) => {
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
           }}
         >
-          <div style={{ display: 'flex' }}>Looks like you don't have a allowance</div>
+          <div style={{ display: 'flex' }}>Error, or you don't have an allowance</div>
         </div>
       ),
       intents: [
