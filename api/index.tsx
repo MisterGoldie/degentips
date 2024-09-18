@@ -177,11 +177,11 @@ app.frame('/check-allowance', async (c) => {
             fontWeight: 'bold',
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
-              <span style={{fontSize: '100px'}}>@{userInfo.profileName}</span>
-              <img src={userInfo.profileImage} alt="Profile" style={{width: '300px', height: '300px', borderRadius: '50%'}} />
+              <span style={{fontSize: '80px'}}>@{userInfo.profileName}</span>
+              <img src={userInfo.profileImage} alt="Profile" style={{width: '260px', height: '260px', borderRadius: '50%'}} />
             </div>
             
-            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '32px'}}>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '42px'}}>
               <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
                 <span style={{marginRight: '10px'}}>Daily allowance :</span>
                 <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.tip_allowance} $Degen</span>
