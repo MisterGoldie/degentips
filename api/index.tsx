@@ -26,6 +26,8 @@ export const app = new Frog({
 
 const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/allowances';
 const backgroundImage = "https://bafybeiedmcuxwwhimtz7ivvsa7mztnlv5t3fhe7c4jd5b6ocgnmcd52sve.ipfs.w3s.link/check%20frame.png";
+const zeroBalanceImage = "https://bafybeif5xdeft5mfhofj3zrawmn3ldqkhemukuclndie6pnomusiwn2xoe.ipfs.w3s.link/error%20frame.png";
+const errorBackgroundImage = "https://bafybeihwaijt5lknkz3c2up5uq5ci3gzfyga3gpgb4mv73cmktfvsf7mku.ipfs.w3s.link/error%20frame%20(1).png";
 const AIRSTACK_API_URL = 'https://api.airstack.xyz/gql';
 const AIRSTACK_API_KEY = '103ba30da492d4a7e89e7026a6d3a234e';
 
@@ -126,7 +128,7 @@ app.frame('/check-allowance', async (c) => {
       image: (
         <div
           style={{
-            backgroundImage: `url(${backgroundImage})`,
+            backgroundImage: `url(${errorBackgroundImage})`,
             width: '1200px',
             height: '628px',
             display: 'flex',
@@ -159,10 +161,13 @@ app.frame('/check-allowance', async (c) => {
       const latestAllowance = allowanceDataArray[0];
       console.log('Latest Allowance Data:', latestAllowance);
 
+      const hasZeroBalance = parseFloat(latestAllowance.remaining_tip_allowance) <= 0 && parseFloat(latestAllowance.tip_allowance) > 0;
+      const currentBackgroundImage = hasZeroBalance ? zeroBalanceImage : backgroundImage;
+
       return c.res({
         image: (
           <div style={{
-            backgroundImage: `url(${backgroundImage})`,
+            backgroundImage: `url(${currentBackgroundImage})`,
             width: '1200px',
             height: '628px',
             display: 'flex',
@@ -213,7 +218,7 @@ app.frame('/check-allowance', async (c) => {
       image: (
         <div
           style={{
-            backgroundImage: `url(${backgroundImage})`,
+            backgroundImage: `url(${errorBackgroundImage})`,
             width: '1200px',
             height: '628px',
             display: 'flex',
