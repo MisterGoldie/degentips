@@ -28,6 +28,7 @@ const backgroundImages = [
   "https://bafybeiayzxthtwanqccqgk7bod2bclor5sdy7govxfummtyhf3eyp2vrx4.ipfs.w3s.link/check%20frame%2015.png",
   "https://bafybeihjdmsv2fotd235rkysuyuix2xrcjjecxepok7kgbmmoskrt5zpoy.ipfs.w3s.link/check%20frame%2012.png",
   "https://bafybeicshqnh3kfoadbkcexcb6ddxkef4yv7rmjhguv65grymtbqxbav2u.ipfs.w3s.link/check%20frame%2017.png",
+  "https://bafybeidd7bkjem462nztxbx7ymldmyk6tywhtfqtblmih2yhyqjnarin7i.ipfs.w3s.link/check%20frame%2018.png",
   "https://bafybeig2jw22ajkr5e6rwp3ck7ogty5tcbgeok3lhrfe6zdc2tdiet2vdu.ipfs.w3s.link/check%20frame%2016.png",
   "https://bafybeifpyopppzkykpewumw5vn7fw77p67lct4zw7sn2aaw4lww7og6nzi.ipfs.w3s.link/check%20frame%2014.png",
   "https://bafybeigi5xfeu5oxamnssaclwi4oxuhnhfiviyqpufil7s6umsautdihym.ipfs.w3s.link/check%20frame%2011.png"
