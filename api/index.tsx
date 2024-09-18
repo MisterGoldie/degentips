@@ -178,7 +178,7 @@ app.frame('/check-allowance', async (c) => {
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
               <span style={{fontSize: '40px'}}>@{userInfo.profileName}</span>
-              <img src={userInfo.profileImage} alt="Profile" style={{width: '100px', height: '100px', borderRadius: '50%'}} />
+              <img src={userInfo.profileImage} alt="Profile" style={{width: '300px', height: '300px', borderRadius: '50%'}} />
             </div>
             
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '32px'}}>
