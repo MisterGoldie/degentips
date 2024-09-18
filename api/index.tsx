@@ -196,7 +196,7 @@ app.frame('/check-allowance', async (c) => {
                 width: '240px', 
                 height: '240px', 
                 borderRadius: '50%',
-                border: '4px solid black' 
+                border: '4px solid black'
               }} />
             </div>
             
@@ -225,7 +225,8 @@ app.frame('/check-allowance', async (c) => {
           </div>
         ),
         intents: [
-          <Button action="/">Check Again</Button>
+          <Button action="/check-allowance">Refresh Balance</Button>,
+          <Button action="/">Back to Home</Button>
         ],
       });
     } else {
@@ -259,7 +260,6 @@ app.frame('/check-allowance', async (c) => {
     });
   }
 })
-
 devtools(app, { serveStatic })
 
 export const GET = handle(app)
