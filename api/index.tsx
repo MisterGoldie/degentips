@@ -28,6 +28,9 @@ const DEGEN_TIPS_API_URL = 'https://api.degen.tips/airdrop2/allowances';
 const backgroundImages = [
   "https://bafybeidhdqc3vwqfgzharotwqbsvgd5wuhyltpjywy2hvyqhtm7laovihm.ipfs.w3s.link/check%20frame%204.png",
   "https://bafybeihjdmsv2fotd235rkysuyuix2xrcjjecxepok7kgbmmoskrt5zpoy.ipfs.w3s.link/check%20frame%2012.png",
+  "https://bafybeiayzxthtwanqccqgk7bod2bclor5sdy7govxfummtyhf3eyp2vrx4.ipfs.w3s.link/check%20frame%2015.png",
+  "https://bafybeig2jw22ajkr5e6rwp3ck7ogty5tcbgeok3lhrfe6zdc2tdiet2vdu.ipfs.w3s.link/check%20frame%2016.png",
+  "https://bafybeifpyopppzkykpewumw5vn7fw77p67lct4zw7sn2aaw4lww7og6nzi.ipfs.w3s.link/check%20frame%2014.png",
   "https://bafybeigi5xfeu5oxamnssaclwi4oxuhnhfiviyqpufil7s6umsautdihym.ipfs.w3s.link/check%20frame%2011.png"
 ];
 const zeroBalanceImage = "https://bafybeif5xdeft5mfhofj3zrawmn3ldqkhemukuclndie6pnomusiwn2xoe.ipfs.w3s.link/error%20frame.png";
