@@ -177,7 +177,7 @@ app.frame('/check-allowance', async (c) => {
             fontWeight: 'bold',
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
-              <span style={{fontSize: '40px'}}>@{userInfo.profileName}</span>
+              <span style={{fontSize: '100px'}}>@{userInfo.profileName}</span>
               <img src={userInfo.profileImage} alt="Profile" style={{width: '300px', height: '300px', borderRadius: '50%'}} />
             </div>
             
