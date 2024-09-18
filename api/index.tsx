@@ -96,18 +96,18 @@ async function getUserInfo(fid: string): Promise<{ profileName: string; profileI
   }
 }
 
-async function getEstimatedNextDayAllowance(fid: string): Promise<string> {
+async function getDailyReceivedTips(fid: string): Promise<string> {
   try {
-    const url = `${DEGEN_TIPS_API_URL}/estimated-next-day-allowance?fid=${fid}`; // Adjust the endpoint as needed
+    const url = `${DEGEN_TIPS_API_URL}/daily-received?fid=${fid}`; // Adjust the endpoint as needed
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    return data.estimatedAllowance || 'N/A';
+    return data.dailyReceived || '0';
   } catch (error) {
-    console.error('Error fetching estimated next day allowance:', error);
-    return 'N/A';
+    console.error('Error fetching daily received tips:', error);
+    return '0';
   }
 }
 
@@ -171,14 +171,14 @@ app.frame('/check-allowance', async (c) => {
   }
 
   try {
-    const [allowanceDataArray, userInfo, estimatedNextDayAllowance] = await Promise.all([
+    const [allowanceDataArray, userInfo, dailyReceived] = await Promise.all([
       getAllowanceData(fid.toString()),
       getUserInfo(fid.toString()),
-      getEstimatedNextDayAllowance(fid.toString())
+      getDailyReceivedTips(fid.toString())
     ]);
     console.log('Allowance Data Array:', allowanceDataArray);
     console.log('User Info:', userInfo);
-    console.log('Estimated Next Day Allowance:', estimatedNextDayAllowance);
+    console.log('Daily Received Tips:', dailyReceived);
 
     if (allowanceDataArray && allowanceDataArray.length > 0 && userInfo) {
       const latestAllowance = allowanceDataArray[0];
@@ -190,7 +190,7 @@ app.frame('/check-allowance', async (c) => {
         : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
 
       // Create the share text
-      const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}, Est. Next Day: ${estimatedNextDayAllowance}. Check yours with @goldie's frame!`;
+      const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}, Received Today: ${dailyReceived}. Check yours with @goldie's frame!`;
 
       // Create the share URL (this should point to your frame's entry point)
       const shareUrl = `https://degentips-lac.vercel.app/api`;
@@ -229,13 +229,13 @@ app.frame('/check-allowance', async (c) => {
                 <span style={{marginRight: '10px'}}>Daily allowance :</span>
                 <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.tip_allowance} $Degen</span>
               </div>
-              <div style={{display: 'flex', justifyContent: 'flex-end', width: 'true'}}>
+              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
                 <span style={{marginRight: '10px'}}>Remaining allowance :</span>
                 <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
               </div>
               <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-                <span style={{marginRight: '10px'}}>Est. Next Day Allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{estimatedNextDayAllowance} $Degen</span>
+                <span style={{marginRight: '10px'}}>Received Today :</span>
+                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{dailyReceived} $Degen</span>
               </div>
             </div>
             
@@ -317,10 +317,10 @@ app.frame('/share', async (c) => {
   }
 
   try {
-    const [allowanceDataArray, userInfo, estimatedNextDayAllowance] = await Promise.all([
+    const [allowanceDataArray, userInfo, dailyReceived] = await Promise.all([
       getAllowanceData(fid.toString()),
       getUserInfo(fid.toString()),
-      getEstimatedNextDayAllowance(fid.toString())
+      getDailyReceivedTips(fid.toString())
     ]);
 
     if (allowanceDataArray && allowanceDataArray.length > 0 && userInfo) {
@@ -330,7 +330,7 @@ app.frame('/share', async (c) => {
       const shareBackgroundImage = "https://bafybeidhdqc3vwqfgzharotwqbsvgd5wuhyltpjywy2hvyqhtm7laovihm.ipfs.w3s.link/check%20frame%204.png";
 
       // Create the share text
-      const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}, Est. Next Day: ${estimatedNextDayAllowance}. Check yours with @goldie's frame!`;
+      const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}, Received Today: ${dailyReceived}. Check yours with @goldie's frame!`;
 
       // Create the share URL (this should point to your frame's entry point)
       const shareUrl = `https://degentips-lac.vercel.app/api`;
@@ -366,7 +366,7 @@ app.frame('/share', async (c) => {
                 Remaining: {latestAllowance.remaining_tip_allowance} $DEGEN
               </div>
               <div style={{fontSize: '36px', marginBottom: '10px'}}>
-                Est. Next Day Allowance: {estimatedNextDayAllowance} $DEGEN
+                Received Today: {dailyReceived} $DEGEN
               </div>
               <div style={{fontSize: '24px', marginTop: 'auto'}}>
                 Check your $DEGEN tipping stats with @goldie's frame!
