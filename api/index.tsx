@@ -181,7 +181,7 @@ app.frame('/check-allowance', async (c) => {
               <img src={userInfo.profileImage} alt="Profile" style={{width: '260px', height: '260px', borderRadius: '50%'}} />
             </div>
             
-            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '42px'}}>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '33px'}}>
               <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
                 <span style={{marginRight: '10px'}}>Daily allowance :</span>
                 <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.tip_allowance} $Degen</span>
