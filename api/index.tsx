@@ -172,6 +172,15 @@ app.frame('/check-allowance', async (c) => {
         ? zeroBalanceImage 
         : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
 
+      // Create the share text
+      const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
+
+      // Create the share URL (this should point to your frame's entry point)
+      const shareUrl = `https://degentips-lac.vercel.app/api`;
+
+      // Create the Farcaster share URL
+      const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
+
       return c.res({
         image: (
           <div style={{
@@ -225,7 +234,7 @@ app.frame('/check-allowance', async (c) => {
         intents: [
           <Button action="/check-allowance">Refresh Balance</Button>,
           <Button action="/">Back to Home</Button>,
-          <Button action="/share">Share Stats</Button>,
+          <Button.Link href={farcasterShareURL}>Share Stats</Button.Link>,
         ],
       });
     } else {
@@ -258,7 +267,7 @@ app.frame('/check-allowance', async (c) => {
       ],
     });
   }
-})
+});
 
 app.frame('/share', async (c) => {
   const { fid } = c.frameData ?? {};
@@ -295,6 +304,15 @@ app.frame('/share', async (c) => {
     if (allowanceDataArray && allowanceDataArray.length > 0 && userInfo) {
       const latestAllowance = allowanceDataArray[0];
 
+      // Create the share text
+      const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
+
+      // Create the share URL (this should point to your frame's entry point)
+      const shareUrl = `https://degentips-lac.vercel.app/api`;
+
+      // Create the Farcaster share URL
+      const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
+
       return c.res({
         image: (
           <div style={{
@@ -330,6 +348,7 @@ app.frame('/share', async (c) => {
         ),
         intents: [
           <Button action="/">Check Your Stats</Button>,
+          <Button.Link href={farcasterShareURL}>Share Your Stats</Button.Link>,
         ],
       });
     } else {
