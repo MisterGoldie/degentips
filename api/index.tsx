@@ -92,7 +92,7 @@ async function getUserInfo(fid: string): Promise<{ profileName: string; profileI
 }
 
 app.frame('/', () => {
-  const gifUrl = 'https://bafybeieu6ofyhh23mmnul7guyei535rzlznodajpiefop4gtq2r36chtfi.ipfs.w3s.link/IMG_7981.GIF'
+  const gifUrl = 'https://bafybeiebmg56vpvwrbsa3znglzj4xv3mwlpzcrgyuydcdsscs2cqbf4rju.ipfs.w3s.link/IMG_8003.GIF'
   const baseUrl = 'https://degentips-lac.vercel.app/'
 
   const html = `
