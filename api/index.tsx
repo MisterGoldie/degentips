@@ -225,8 +225,8 @@ app.frame('/check-allowance', async (c) => {
           </div>
         ),
         intents: [
-          <Button action="/check-allowance">Refresh Balance</Button>,
-          <Button action="/">Back to Home</Button>
+          <Button action="/check-allowance">Refresh</Button>,
+          <Button action="/">Home</Button>
         ],
       });
     } else {
