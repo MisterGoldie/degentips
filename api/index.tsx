@@ -202,7 +202,7 @@ app.frame('/check-allowance', async (c) => {
                 <span style={{
                   fontSize: '36px',
                   textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-                  color: '#ADD8E6', // Light blue for FID and Rank
+                  color: '#FFD700', // Gold color for FID and Rank
                 }}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
               </div>
               <img src={userInfo.profileImage} alt="Profile" style={{
@@ -219,7 +219,7 @@ app.frame('/check-allowance', async (c) => {
               alignItems: 'flex-end', 
               marginTop: 'auto', 
               marginBottom: '20px', 
-              fontSize: '40px',
+              fontSize: '30px',
             }}>
               <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
                 <span style={{marginRight: '10px', color: '#98FB98'}}>Daily allowance :</span>
