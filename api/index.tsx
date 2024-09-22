@@ -114,10 +114,10 @@ app.frame('/', () => {
       <meta property="fc:frame:button:1" content="Check stats">
       <meta property="fc:frame:button:1:action" content="post">
       <meta property="fc:frame:post_url" content="${baseUrl}/api/check-allowance">
-      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     </head>
     <body>
-      <h1 style="font-family: 'Poppins', sans-serif;">$Degen Dave tipping tracker by @goldie. Only viewable on Warpcast. Follow Goldie on Warpcast - https://warpcast.com/goldie </h1>
+      <h1 style="font-family: 'Oswald', sans-serif;">$Degen Dave tipping tracker by @goldie. Only viewable on Warpcast. Follow Goldie on Warpcast - https://warpcast.com/goldie </h1>
     </body>
     </html>
   `
@@ -147,7 +147,7 @@ app.frame('/check-allowance', async (c) => {
             fontWeight: 'bold',
             textAlign: 'center',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: '"Oswald", sans-serif',
           }}
         >
           <div style={{ display: 'flex' }}>Unable to retrieve user information: No FID provided</div>
@@ -192,7 +192,7 @@ app.frame('/check-allowance', async (c) => {
             color: 'white',
             fontWeight: 'bold',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: '"Oswald", sans-serif',
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
               <div style={{display: 'flex', flexDirection: 'column'}}>
@@ -257,7 +257,7 @@ app.frame('/check-allowance', async (c) => {
             fontWeight: 'bold',
             textAlign: 'center',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: '"Oswald", sans-serif',
           }}
         >
           <div style={{ display: 'flex' }}>Error, or you don't have an allowance</div>
@@ -290,7 +290,7 @@ app.frame('/share', async (c) => {
           fontWeight: 'bold',
           textAlign: 'center',
           textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-          fontFamily: '"Poppins", sans-serif',
+          fontFamily: '"Oswald", sans-serif',
         }}>
           <div>Unable to retrieve user information: No FID provided</div>
         </div>
@@ -332,7 +332,7 @@ app.frame('/share', async (c) => {
             color: 'white',
             fontWeight: 'bold',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: '"Oswald", sans-serif',
           }}>
             <div style={{
               display: 'flex',
@@ -378,7 +378,7 @@ app.frame('/share', async (c) => {
           fontWeight: 'bold',
           textAlign: 'center',
           textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-          fontFamily: '"Poppins", sans-serif',
+          fontFamily: '"Oswald", sans-serif',
         }}>
           <div>Error fetching data. Please try again later.</div>
         </div>
