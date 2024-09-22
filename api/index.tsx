@@ -196,7 +196,6 @@ app.frame('/check-allowance', async (c) => {
                 <span style={{
                   fontSize: '90px',
                   lineHeight: '1',
-                  textShadow: '3px 3px 6px rgba(0,0,0,0.5)',
                   color: '#FFD700', // Gold color for username
                 }}>@{userInfo.profileName}</span>
                 <span style={{
@@ -236,7 +235,7 @@ app.frame('/check-allowance', async (c) => {
               fontSize: '28px', 
               alignSelf: 'flex-end', 
               textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-              color: '#F0E68C', // Khaki color for timestamp
+              color: '#FFD700', // Gold color for timestamp
             }}>
               As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
                 month: 'numeric',
