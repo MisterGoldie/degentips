@@ -142,10 +142,10 @@ app.frame('/check-allowance', async (c) => {
             justifyContent: 'center',
             alignItems: 'center',
             color: '#FFD700',
-            fontSize: '48px',
+            fontSize: '52px',
             fontWeight: 'bold',
             textAlign: 'center',
-            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            textShadow: '3px 3px 6px rgba(0,0,0,0.7)',
           }}
         >
           <div style={{ display: 'flex' }}>Unable to retrieve user information: No FID provided</div>
@@ -186,29 +186,32 @@ app.frame('/check-allowance', async (c) => {
             height: '628px',
             display: 'flex',
             flexDirection: 'column',
-            padding: '20px',
+            padding: '25px',
             color: 'white',
             fontWeight: 'bold',
-            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
               <div style={{display: 'flex', flexDirection: 'column'}}>
                 <span style={{
-                  fontSize: '90px',
-                  lineHeight: '1',
+                  fontSize: '95px',
+                  lineHeight: '1.1',
                   color: '#FFD700', // Gold color for username
+                  textShadow: '3px 3px 6px rgba(0,0,0,0.8)',
                 }}>@{userInfo.profileName}</span>
                 <span style={{
-                  fontSize: '36px',
-                  textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+                  fontSize: '38px',
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
                   color: '#FFD700', // Gold color for FID and Rank
+                  marginTop: '5px',
                 }}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
               </div>
               <img src={userInfo.profileImage} alt="Profile" style={{
-                width: '240px', 
-                height: '240px', 
+                width: '250px', 
+                height: '250px', 
                 borderRadius: '50%',
-                border: '4px solid #FFD700' // Gold border for profile image
+                border: '5px solid #FFD700', // Gold border for profile image
+                boxShadow: '0 0 15px rgba(255,215,0,0.6)', // Subtle glow effect
               }} />
             </div>
             
@@ -217,25 +220,26 @@ app.frame('/check-allowance', async (c) => {
               flexDirection: 'column', 
               alignItems: 'flex-end', 
               marginTop: 'auto', 
-              marginBottom: '20px', 
-              fontSize: '30px',
+              marginBottom: '25px', 
+              fontSize: '34px',
             }}>
-              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-                <span style={{marginRight: '10px', color: '#98FB98'}}>Daily allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '200px', textAlign: 'right', color: '#FF69B4'}}>{latestAllowance.tip_allowance} $Degen</span>
+              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%', marginBottom: '10px'}}>
+                <span style={{marginRight: '15px', color: '#98FB98'}}>Daily allowance :</span>
+                <span style={{fontWeight: '900', minWidth: '220px', textAlign: 'right', color: '#FF69B4'}}>{latestAllowance.tip_allowance} $Degen</span>
               </div>
               <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-                <span style={{marginRight: '10px', color: '#98FB98'}}>Remaining allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '200px', textAlign: 'right', color: '#FF69B4'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
+                <span style={{marginRight: '15px', color: '#98FB98'}}>Remaining allowance :</span>
+                <span style={{fontWeight: '900', minWidth: '220px', textAlign: 'right', color: '#FF69B4'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
               </div>
             </div>
             
             <div style={{
               display: 'flex', 
-              fontSize: '28px', 
+              fontSize: '30px', 
               alignSelf: 'flex-end', 
-              textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+              textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
               color: '#FFD700', // Gold color for timestamp
+              fontStyle: 'italic',
             }}>
               As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
                 month: 'numeric',
@@ -271,10 +275,10 @@ app.frame('/check-allowance', async (c) => {
             justifyContent: 'center',
             alignItems: 'center',
             color: '#FFD700',
-            fontSize: '48px',
+            fontSize: '52px',
             fontWeight: 'bold',
             textAlign: 'center',
-            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            textShadow: '3px 3px 6px rgba(0,0,0,0.7)',
           }}
         >
           <div style={{ display: 'flex' }}>Error, or you don't have an allowance</div>
