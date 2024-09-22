@@ -203,12 +203,12 @@ app.frame('/check-allowance', async (c) => {
                 <span style={{fontSize: '80px', textShadow: '3px 3px 6px rgba(0,0,0,0.5)'}}>@{userInfo.profileName}</span>
                 <span style={{fontSize: '30px', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
               </div>
-              <img src={userInfo.profileImage} alt="Profile" style={{
+              <img src={userInfo.profileImage} alt="Profile" style={{ // PFP
                 width: '240px', 
                 height: '240px', 
                 borderRadius: '50%',
                 border: '4px solid black',
-                boxShadow: '0 0 20px rgba(255,215,0,0.6)', // Subtle glow effect
+                boxShadow: '0 0 20px rgba(0,0,0,0.7)', // Subtle glow effect
               }} />
             </div>
             
