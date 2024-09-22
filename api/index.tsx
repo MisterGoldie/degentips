@@ -215,7 +215,7 @@ app.frame('/check-allowance', async (c) => {
             }} />
           </div>
           
-          {latestAllowance ? (
+          {latestAllowance && (
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '33px'}}>
               <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
                 <span style={{marginRight: '10px'}}>Daily allowance :</span>
@@ -225,24 +225,17 @@ app.frame('/check-allowance', async (c) => {
                 <span style={{marginRight: '10px'}}>Remaining allowance :</span>
                 <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
               </div>
-            </div>
-          ) : (
-            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, fontSize: '33px'}}>
-              No $DEGEN allowance data available
-            </div>
-          )}
-          
-          {latestAllowance && (
-            <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
-              As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
-                month: 'numeric',
-                day: 'numeric',
-                year: '2-digit',
-                hour: 'numeric',
-                minute: '2-digit',
-                timeZone: 'America/Chicago',
-                hour12: true
-              })} CST
+              <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
+                As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
+                  month: 'numeric',
+                  day: 'numeric',
+                  year: '2-digit',
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  timeZone: 'America/Chicago',
+                  hour12: true
+                })} CST
+              </div>
             </div>
           )}
         </div>
@@ -358,7 +351,7 @@ app.frame('/share', async (c) => {
             <div style={{fontSize: '48px', marginBottom: '20px'}}>
               $DEGEN Tipping Stats for @{userInfo.profileName}
             </div>
-            {latestAllowance ? (
+            {latestAllowance && (
               <>
                 <div style={{fontSize: '36px', marginBottom: '10px'}}>
                   Daily Allowance: {latestAllowance.tip_allowance} $DEGEN
@@ -381,10 +374,6 @@ app.frame('/share', async (c) => {
                   })} CST
                 </div>
               </>
-            ) : (
-              <div style={{fontSize: '36px', marginBottom: '10px'}}>
-                No $DEGEN allowance data available
-              </div>
             )}
             <div style={{fontSize: '24px', marginTop: 'auto'}}>
               Check your $DEGEN tipping stats with @goldie's frame!
