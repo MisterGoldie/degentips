@@ -114,9 +114,10 @@ app.frame('/', () => {
       <meta property="fc:frame:button:1" content="Check stats">
       <meta property="fc:frame:button:1:action" content="post">
       <meta property="fc:frame:post_url" content="${baseUrl}/api/check-allowance">
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     </head>
     <body>
-      <h1>$Degen Dave tipping tracker by @goldie. Only viewable on Warpcast. Follow Goldie on Warpcast - https://warpcast.com/goldie </h1>
+      <h1 style="font-family: 'Poppins', sans-serif;">$Degen Dave tipping tracker by @goldie. Only viewable on Warpcast. Follow Goldie on Warpcast - https://warpcast.com/goldie </h1>
     </body>
     </html>
   `
@@ -146,6 +147,7 @@ app.frame('/check-allowance', async (c) => {
             fontWeight: 'bold',
             textAlign: 'center',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            fontFamily: '"Poppins", sans-serif',
           }}
         >
           <div style={{ display: 'flex' }}>Unable to retrieve user information: No FID provided</div>
@@ -174,15 +176,8 @@ app.frame('/check-allowance', async (c) => {
         ? zeroBalanceImage 
         : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
 
-      
-
-      // Create the share text
       const shareText = `Degen Dave's daily tipping stats🎩. Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
-
-      // Create the share URL (this should point to your frame's entry point)
       const shareUrl = `https://degentips-lac.vercel.app/api`;
-
-      // Create the Farcaster share URL
       const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
 
       return c.res({
@@ -197,11 +192,12 @@ app.frame('/check-allowance', async (c) => {
             color: 'white',
             fontWeight: 'bold',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            fontFamily: '"Poppins", sans-serif',
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
               <div style={{display: 'flex', flexDirection: 'column'}}>
-                <span style={{fontSize: '80px', textShadow: '3px 3px 6px rgba(0,0,0,0.5)'}}>@{userInfo.profileName}</span>
-                <span style={{fontSize: '30px', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
+                <span style={{fontSize: '80px', textShadow: '3px 3px 6px rgba(0,0,0,0.5)', fontWeight: '700'}}>@{userInfo.profileName}</span>
+                <span style={{fontSize: '30px', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', fontWeight: '400'}}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
               </div>
               <img src={userInfo.profileImage} alt="Profile" style={{
                 width: '240px', 
@@ -213,16 +209,16 @@ app.frame('/check-allowance', async (c) => {
             
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '33px'}}>
               <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-                <span style={{marginRight: '10px'}}>Daily allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.tip_allowance} $Degen</span>
+                <span style={{marginRight: '10px', fontWeight: '400'}}>Daily allowance :</span>
+                <span style={{fontWeight: '700', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.tip_allowance} $Degen</span>
               </div>
               <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-                <span style={{marginRight: '10px'}}>Remaining allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
+                <span style={{marginRight: '10px', fontWeight: '400'}}>Remaining allowance :</span>
+                <span style={{fontWeight: '700', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
               </div>
             </div>
             
-            <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
+            <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end', textShadow: '1px 1px 2px rgba(0,0,0,0.5)', fontWeight: '400'}}>
               As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
                 month: 'numeric',
                 day: 'numeric',
@@ -261,6 +257,7 @@ app.frame('/check-allowance', async (c) => {
             fontWeight: 'bold',
             textAlign: 'center',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            fontFamily: '"Poppins", sans-serif',
           }}
         >
           <div style={{ display: 'flex' }}>Error, or you don't have an allowance</div>
@@ -272,6 +269,8 @@ app.frame('/check-allowance', async (c) => {
     });
   }
 });
+
+// The /share frame would go here, but it's not included as per your request
 
 app.frame('/share', async (c) => {
   const { fid } = c.frameData ?? {};
@@ -291,6 +290,7 @@ app.frame('/share', async (c) => {
           fontWeight: 'bold',
           textAlign: 'center',
           textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+          fontFamily: '"Poppins", sans-serif',
         }}>
           <div>Unable to retrieve user information: No FID provided</div>
         </div>
@@ -328,26 +328,27 @@ app.frame('/share', async (c) => {
             height: '628px',
             display: 'flex',
             flexDirection: 'column',
-            padding: '20px',
+            padding: '40px',
             color: 'white',
             fontWeight: 'bold',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            fontFamily: '"Poppins", sans-serif',
           }}>
             <div style={{
               display: 'flex',
               flexDirection: 'column',
               flex: 1,
             }}>
-              <div style={{fontSize: '48px', marginBottom: '20px'}}>
+              <div style={{fontSize: '48px', marginBottom: '20px', fontWeight: '700'}}>
                 $DEGEN Tipping Stats for @{userInfo.profileName}
               </div>
-              <div style={{fontSize: '36px', marginBottom: '10px'}}>
-                Daily Allowance: {latestAllowance.tip_allowance} $DEGEN
+              <div style={{fontSize: '36px', marginBottom: '10px', fontWeight: '400'}}>
+                Daily Allowance: <span style={{fontWeight: '700'}}>{latestAllowance.tip_allowance} $DEGEN</span>
               </div>
-              <div style={{fontSize: '36px', marginBottom: '10px'}}>
-                Remaining: {latestAllowance.remaining_tip_allowance} $DEGEN
+              <div style={{fontSize: '36px', marginBottom: '10px', fontWeight: '400'}}>
+                Remaining: <span style={{fontWeight: '700'}}>{latestAllowance.remaining_tip_allowance} $DEGEN</span>
               </div>
-              <div style={{fontSize: '24px', marginTop: 'auto'}}>
+              <div style={{fontSize: '24px', marginTop: 'auto', fontWeight: '400'}}>
                 Check your $DEGEN tipping stats with @goldie's frame!
               </div>
             </div>
@@ -377,6 +378,7 @@ app.frame('/share', async (c) => {
           fontWeight: 'bold',
           textAlign: 'center',
           textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+          fontFamily: '"Poppins", sans-serif',
         }}>
           <div>Error fetching data. Please try again later.</div>
         </div>
