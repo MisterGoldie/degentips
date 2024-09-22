@@ -165,51 +165,57 @@ app.frame('/check-allowance', async (c) => {
     console.log('Allowance Data Array:', allowanceDataArray);
     console.log('User Info:', userInfo);
 
-    if (allowanceDataArray && allowanceDataArray.length > 0 && userInfo) {
-      const latestAllowance = allowanceDataArray[0];
-      console.log('Latest Allowance Data:', latestAllowance);
+    if (!userInfo) {
+      throw new Error('Unable to retrieve user information');
+    }
 
-      const hasZeroBalance = parseFloat(latestAllowance.remaining_tip_allowance) <= 0;
-      const currentBackgroundImage = hasZeroBalance 
-        ? zeroBalanceImage 
-        : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
+    const latestAllowance = allowanceDataArray && allowanceDataArray.length > 0 ? allowanceDataArray[0] : null;
+    console.log('Latest Allowance Data:', latestAllowance);
 
-      // Create the share text
-      const shareText = `Degen Dave's daily tipping stats🎩. Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
+    const hasZeroBalance = !latestAllowance || parseFloat(latestAllowance.remaining_tip_allowance) <= 0;
+    const currentBackgroundImage = hasZeroBalance 
+      ? zeroBalanceImage 
+      : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
 
-      // Create the share URL (this should point to your frame's entry point)
-      const shareUrl = `https://degentips-lac.vercel.app/api`;
+    // Create the share text
+    const shareText = latestAllowance 
+      ? `Degen Dave's daily tipping stats🎩. Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`
+      : `Check your $DEGEN tipping stats with @goldie's frame!`;
 
-      // Create the Farcaster share URL
-      const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
+    // Create the share URL (this should point to your frame's entry point)
+    const shareUrl = `https://degentips-lac.vercel.app/api`;
 
-      return c.res({
-        image: (
-          <div style={{
-            backgroundImage: `url(${currentBackgroundImage})`,
-            width: '1200px',
-            height: '628px',
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '20px',
-            color: 'white',
-            fontWeight: 'bold',
-            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-          }}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
-              <div style={{display: 'flex', flexDirection: 'column'}}>
-                <span style={{fontSize: '80px', textShadow: '3px 3px 6px rgba(0,0,0,0.5)'}}>@{userInfo.profileName}</span>
-                <span style={{fontSize: '30px', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
-              </div>
-              <img src={userInfo.profileImage} alt="Profile" style={{
-                width: '240px', 
-                height: '240px', 
-                borderRadius: '50%',
-                border: '4px solid black',
-                boxShadow: '0 0 20px rgba(0,0,0,0.7)',
-              }} />
+    // Create the Farcaster share URL
+    const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
+
+    return c.res({
+      image: (
+        <div style={{
+          backgroundImage: `url(${currentBackgroundImage})`,
+          width: '1200px',
+          height: '628px',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '20px',
+          color: 'white',
+          fontWeight: 'bold',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+        }}>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
+            <div style={{display: 'flex', flexDirection: 'column'}}>
+              <span style={{fontSize: '80px', textShadow: '3px 3px 6px rgba(0,0,0,0.5)'}}>@{userInfo.profileName}</span>
+              <span style={{fontSize: '30px', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>FID: {fid} {latestAllowance && `| Rank: ${latestAllowance.user_rank}`}</span>
             </div>
-            
+            <img src={userInfo.profileImage} alt="Profile" style={{
+              width: '240px', 
+              height: '240px', 
+              borderRadius: '50%',
+              border: '4px solid black',
+              boxShadow: '0 0 20px rgba(0,0,0,0.7)',
+            }} />
+          </div>
+          
+          {latestAllowance ? (
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '33px'}}>
               <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
                 <span style={{marginRight: '10px'}}>Daily allowance :</span>
@@ -220,7 +226,13 @@ app.frame('/check-allowance', async (c) => {
                 <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
               </div>
             </div>
-            
+          ) : (
+            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, fontSize: '33px'}}>
+              No $DEGEN allowance data available
+            </div>
+          )}
+          
+          {latestAllowance && (
             <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
               As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
                 month: 'numeric',
@@ -232,17 +244,15 @@ app.frame('/check-allowance', async (c) => {
                 hour12: true
               })} CST
             </div>
-          </div>
-        ),
-        intents: [
-          <Button action="/">Home</Button>,
-          <Button action="/check-allowance">Refresh</Button>,
-          <Button.Link href={farcasterShareURL}>Share</Button.Link>,
-        ],
-      });
-    } else {
-      throw new Error('No allowance data or user info available');
-    }
+          )}
+        </div>
+      ),
+      intents: [
+        <Button action="/">Home</Button>,
+        <Button action="/check-allowance">Refresh</Button>,
+        <Button.Link href={farcasterShareURL}>Share</Button.Link>,
+      ],
+    });
   } catch (error) {
     console.error('Error in check-allowance frame:', error);
     return c.res({
@@ -262,7 +272,7 @@ app.frame('/check-allowance', async (c) => {
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
           }}
         >
-          <div style={{ display: 'flex' }}>Error retrieving allowance data. Please try again later.</div>
+          <div style={{ display: 'flex' }}>Error retrieving user data. Please try again later.</div>
         </div>
       ),
       intents: [
@@ -304,65 +314,89 @@ app.frame('/share', async (c) => {
       getUserInfo(fid.toString())
     ]);
 
-    if (allowanceDataArray && allowanceDataArray.length > 0 && userInfo) {
-      const latestAllowance = allowanceDataArray[0];
+    if (!userInfo) {
+      throw new Error('Unable to retrieve user information');
+    }
 
-      // Use a specific background for sharing, or choose based on balance
-      const hasZeroBalance = parseFloat(latestAllowance.remaining_tip_allowance) <= 0;
-      const shareBackgroundImage = hasZeroBalance
-        ? zeroBalanceImage
-        : "https://bafybeidhdqc3vwqfgzharotwqbsvgd5wuhyltpjywy2hvyqhtm7laovihm.ipfs.w3s.link/check%20frame%204.png";
+    const latestAllowance = allowanceDataArray && allowanceDataArray.length > 0 ? allowanceDataArray[0] : null;
 
-      // Create the share text
-      const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
+    // Use a specific background for sharing, or choose based on balance
+    const hasZeroBalance = !latestAllowance || parseFloat(latestAllowance.remaining_tip_allowance) <= 0;
+    const shareBackgroundImage = hasZeroBalance
+      ? zeroBalanceImage
+      : "https://bafybeidhdqc3vwqfgzharotwqbsvgd5wuhyltpjywy2hvyqhtm7laovihm.ipfs.w3s.link/check%20frame%204.png";
 
-      // Create the share URL (this should point to your frame's entry point)
-      const shareUrl = `https://degentips-lac.vercel.app/api`;
+    // Create the share text
+    const shareText = latestAllowance 
+      ? `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`
+      : `Check your $DEGEN tipping stats with @goldie's frame!`;
 
-      // Create the Farcaster share URL
-      const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
+    // Create the share URL (this should point to your frame's entry point)
+    const shareUrl = `https://degentips-lac.vercel.app/api`;
 
-      return c.res({
-        image: (
+    // Create the Farcaster share URL
+    const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
+
+    return c.res({
+      image: (
+        <div style={{
+          backgroundImage: `url(${shareBackgroundImage})`,
+          width: '1200px',
+          height: '628px',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '20px',
+          color: 'white',
+          fontWeight: 'bold',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+        }}>
           <div style={{
-            backgroundImage: `url(${shareBackgroundImage})`,
-            width: '1200px',
-            height: '628px',
             display: 'flex',
             flexDirection: 'column',
-            padding: '20px',
-            color: 'white',
-            fontWeight: 'bold',
-            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            flex: 1,
           }}>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              flex: 1,
-            }}>
-              <div style={{fontSize: '48px', marginBottom: '20px'}}>
-                $DEGEN Tipping Stats for @{userInfo.profileName}
-              </div>
+            <div style={{fontSize: '48px', marginBottom: '20px'}}>
+              $DEGEN Tipping Stats for @{userInfo.profileName}
+            </div>
+            {latestAllowance ? (
+              <>
+                <div style={{fontSize: '36px', marginBottom: '10px'}}>
+                  Daily Allowance: {latestAllowance.tip_allowance} $DEGEN
+                </div>
+                <div style={{fontSize: '36px', marginBottom: '10px'}}>
+                  Remaining: {latestAllowance.remaining_tip_allowance} $DEGEN
+                </div>
+                <div style={{fontSize: '24px', marginBottom: '10px'}}>
+                  Rank: {latestAllowance.user_rank}
+                </div>
+                <div style={{fontSize: '18px', marginTop: '10px'}}>
+                  As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
+                    month: 'numeric',
+                    day: 'numeric',
+                    year: '2-digit',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    timeZone: 'America/Chicago',
+                    hour12: true
+                  })} CST
+                </div>
+              </>
+            ) : (
               <div style={{fontSize: '36px', marginBottom: '10px'}}>
-                Daily Allowance: {latestAllowance.tip_allowance} $DEGEN
+                No $DEGEN allowance data available
               </div>
-              <div style={{fontSize: '36px', marginBottom: '10px'}}>
-                Remaining: {latestAllowance.remaining_tip_allowance} $DEGEN
-              </div>
-              <div style={{fontSize: '24px', marginTop: 'auto'}}>
-                Check your $DEGEN tipping stats with @goldie's frame!
-              </div>
+            )}
+            <div style={{fontSize: '24px', marginTop: 'auto'}}>
+              Check your $DEGEN tipping stats with @goldie's frame!
             </div>
           </div>
-        ),
-        intents: [
-          <Button action="/">Check Your Stats</Button>,
-          <Button.Link href={farcasterShareURL}>Share Your Stats</Button.Link>,
-        ],
-      });
-    } else {
-      throw new Error('No allowance data or user info available');
-    }
+        </div>
+      ),
+      intents: [
+        <Button action="/">Check Your Stats</Button>,
+        <Button.Link href={farcasterShareURL}>Share Your Stats</Button.Link>,
+      ],
+    });
   } catch (error) {
     console.error('Error in share frame:', error);
     return c.res({
@@ -380,10 +414,10 @@ app.frame('/share', async (c) => {
           textAlign: 'center',
           textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
         }}>
-          <div>Error fetching data. Please try again later.</div>
+          <div>Error fetching user data. Please try again later.</div>
         </div>
       ),
-      intents: [<Button action="/">Back to home</Button>],
+      intents: [<Button action="/">Back to Home</Button>],
     });
   }
 });
