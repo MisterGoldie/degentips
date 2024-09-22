@@ -146,6 +146,7 @@ app.frame('/check-allowance', async (c) => {
             fontWeight: 'bold',
             textAlign: 'center',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            fontFamily: '"Comic Sans MS", cursive, sans-serif',
           }}
         >
           <div style={{ display: 'flex' }}>Unable to retrieve user information: No FID provided</div>
@@ -174,15 +175,8 @@ app.frame('/check-allowance', async (c) => {
         ? zeroBalanceImage 
         : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
 
-      
-
-      // Create the share text
       const shareText = `Degen Dave's daily tipping stats🎩. Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
-
-      // Create the share URL (this should point to your frame's entry point)
       const shareUrl = `https://degentips-lac.vercel.app/api`;
-
-      // Create the Farcaster share URL
       const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
 
       return c.res({
@@ -197,11 +191,20 @@ app.frame('/check-allowance', async (c) => {
             color: 'white',
             fontWeight: 'bold',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            fontFamily: '"Comic Sans MS", cursive, sans-serif',
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
               <div style={{display: 'flex', flexDirection: 'column'}}>
-                <span style={{fontSize: '80px', textShadow: '3px 3px 6px rgba(0,0,0,0.5)'}}>@{userInfo.profileName}</span>
-                <span style={{fontSize: '30px', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
+                <span style={{
+                  fontSize: '80px', 
+                  textShadow: '3px 3px 6px rgba(0,0,0,0.5)',
+                  fontFamily: '"Comic Sans MS", cursive, sans-serif',
+                }}>@{userInfo.profileName}</span>
+                <span style={{
+                  fontSize: '30px', 
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+                  fontFamily: '"Comic Sans MS", cursive, sans-serif',
+                }}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
               </div>
               <img src={userInfo.profileImage} alt="Profile" style={{
                 width: '240px', 
@@ -211,7 +214,15 @@ app.frame('/check-allowance', async (c) => {
               }} />
             </div>
             
-            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '33px'}}>
+            <div style={{
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'flex-end', 
+              marginTop: 'auto', 
+              marginBottom: '20px', 
+              fontSize: '33px',
+              fontFamily: '"Comic Sans MS", cursive, sans-serif',
+            }}>
               <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
                 <span style={{marginRight: '10px'}}>Daily allowance :</span>
                 <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.tip_allowance} $Degen</span>
@@ -222,7 +233,13 @@ app.frame('/check-allowance', async (c) => {
               </div>
             </div>
             
-            <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
+            <div style={{
+              display: 'flex', 
+              fontSize: '24px', 
+              alignSelf: 'flex-end', 
+              textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+              fontFamily: '"Comic Sans MS", cursive, sans-serif',
+            }}>
               As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
                 month: 'numeric',
                 day: 'numeric',
@@ -261,6 +278,7 @@ app.frame('/check-allowance', async (c) => {
             fontWeight: 'bold',
             textAlign: 'center',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+            fontFamily: '"Comic Sans MS", cursive, sans-serif',
           }}
         >
           <div style={{ display: 'flex' }}>Error, or you don't have an allowance</div>
