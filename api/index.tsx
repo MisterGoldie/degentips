@@ -169,12 +169,10 @@ app.frame('/check-allowance', async (c) => {
       const latestAllowance = allowanceDataArray[0];
       console.log('Latest Allowance Data:', latestAllowance);
 
-      const hasZeroBalance = parseFloat(latestAllowance.remaining_tip_allowance) <= 0 && parseFloat(latestAllowance.tip_allowance) > 0;
+      const hasZeroBalance = parseFloat(latestAllowance.remaining_tip_allowance) <= 0;
       const currentBackgroundImage = hasZeroBalance 
         ? zeroBalanceImage 
         : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
-
-      
 
       // Create the share text
       const shareText = `Degen Dave's daily tipping stats🎩. Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
@@ -203,12 +201,12 @@ app.frame('/check-allowance', async (c) => {
                 <span style={{fontSize: '80px', textShadow: '3px 3px 6px rgba(0,0,0,0.5)'}}>@{userInfo.profileName}</span>
                 <span style={{fontSize: '30px', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
               </div>
-              <img src={userInfo.profileImage} alt="Profile" style={{ // PFP
+              <img src={userInfo.profileImage} alt="Profile" style={{
                 width: '240px', 
                 height: '240px', 
                 borderRadius: '50%',
                 border: '4px solid black',
-                boxShadow: '0 0 20px rgba(0,0,0,0.7)', // Subtle glow effect
+                boxShadow: '0 0 20px rgba(0,0,0,0.7)',
               }} />
             </div>
             
@@ -264,11 +262,11 @@ app.frame('/check-allowance', async (c) => {
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
           }}
         >
-          <div style={{ display: 'flex' }}>Error, or you don't have an allowance</div>
+          <div style={{ display: 'flex' }}>Error retrieving allowance data. Please try again later.</div>
         </div>
       ),
       intents: [
-        <Button action="/">Sorry</Button>
+        <Button action="/">Try Again</Button>
       ],
     });
   }
@@ -309,8 +307,11 @@ app.frame('/share', async (c) => {
     if (allowanceDataArray && allowanceDataArray.length > 0 && userInfo) {
       const latestAllowance = allowanceDataArray[0];
 
-      // Use the same specific background for sharing
-      const shareBackgroundImage = "https://bafybeidhdqc3vwqfgzharotwqbsvgd5wuhyltpjywy2hvyqhtm7laovihm.ipfs.w3s.link/check%20frame%204.png";
+      // Use a specific background for sharing, or choose based on balance
+      const hasZeroBalance = parseFloat(latestAllowance.remaining_tip_allowance) <= 0;
+      const shareBackgroundImage = hasZeroBalance
+        ? zeroBalanceImage
+        : "https://bafybeidhdqc3vwqfgzharotwqbsvgd5wuhyltpjywy2hvyqhtm7laovihm.ipfs.w3s.link/check%20frame%204.png";
 
       // Create the share text
       const shareText = `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
