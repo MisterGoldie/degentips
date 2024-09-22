@@ -141,11 +141,11 @@ app.frame('/check-allowance', async (c) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            color: '#FFD700',
-            fontSize: '52px',
+            color: 'white',
+            fontSize: '40px',
             fontWeight: 'bold',
             textAlign: 'center',
-            textShadow: '3px 3px 6px rgba(0,0,0,0.7)',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
           }}
         >
           <div style={{ display: 'flex' }}>Unable to retrieve user information: No FID provided</div>
@@ -174,8 +174,15 @@ app.frame('/check-allowance', async (c) => {
         ? zeroBalanceImage 
         : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
 
+      
+
+      // Create the share text
       const shareText = `Degen Dave's daily tipping stats🎩. Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
+
+      // Create the share URL (this should point to your frame's entry point)
       const shareUrl = `https://degentips-lac.vercel.app/api`;
+
+      // Create the Farcaster share URL
       const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
 
       return c.res({
@@ -186,61 +193,36 @@ app.frame('/check-allowance', async (c) => {
             height: '628px',
             display: 'flex',
             flexDirection: 'column',
-            padding: '25px',
+            padding: '20px',
             color: 'white',
             fontWeight: 'bold',
-            textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
               <div style={{display: 'flex', flexDirection: 'column'}}>
-                <span style={{
-                  fontSize: '95px',
-                  lineHeight: '1.1',
-                  color: '#FFD700', // Gold color for username
-                  textShadow: '3px 3px 6px rgba(0,0,0,0.8)',
-                }}>@{userInfo.profileName}</span>
-                <span style={{
-                  fontSize: '38px',
-                  textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-                  color: '#FFD700', // Gold color for FID and Rank
-                  marginTop: '5px',
-                }}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
+                <span style={{fontSize: '80px', textShadow: '3px 3px 6px rgba(0,0,0,0.5)'}}>@{userInfo.profileName}</span>
+                <span style={{fontSize: '30px', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
               </div>
               <img src={userInfo.profileImage} alt="Profile" style={{
-                width: '250px', 
-                height: '250px', 
+                width: '240px', 
+                height: '240px', 
                 borderRadius: '50%',
-                border: '5px solid #FFD700', // Gold border for profile image
-                boxShadow: '0 0 15px rgba(255,215,0,0.6)', // Subtle glow effect
+                border: '4px solid black'
               }} />
             </div>
             
-            <div style={{
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'flex-end', 
-              marginTop: 'auto', 
-              marginBottom: '25px', 
-              fontSize: '34px',
-            }}>
-              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%', marginBottom: '10px'}}>
-                <span style={{marginRight: '15px', color: '#98FB98'}}>Daily allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '220px', textAlign: 'right', color: '#FF69B4'}}>{latestAllowance.tip_allowance} $Degen</span>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '33px'}}>
+              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+                <span style={{marginRight: '10px'}}>Daily allowance :</span>
+                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.tip_allowance} $Degen</span>
               </div>
               <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-                <span style={{marginRight: '15px', color: '#98FB98'}}>Remaining allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '220px', textAlign: 'right', color: '#FF69B4'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
+                <span style={{marginRight: '10px'}}>Remaining allowance :</span>
+                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
               </div>
             </div>
             
-            <div style={{
-              display: 'flex', 
-              fontSize: '30px', 
-              alignSelf: 'flex-end', 
-              textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-              color: '#FFD700', // Gold color for timestamp
-              fontStyle: 'italic',
-            }}>
+            <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
               As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
                 month: 'numeric',
                 day: 'numeric',
@@ -274,11 +256,11 @@ app.frame('/check-allowance', async (c) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            color: '#FFD700',
-            fontSize: '52px',
+            color: 'white',
+            fontSize: '40px',
             fontWeight: 'bold',
             textAlign: 'center',
-            textShadow: '3px 3px 6px rgba(0,0,0,0.7)',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
           }}
         >
           <div style={{ display: 'flex' }}>Error, or you don't have an allowance</div>
