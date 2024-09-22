@@ -141,12 +141,11 @@ app.frame('/check-allowance', async (c) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            color: 'white',
-            fontSize: '40px',
+            color: '#FFD700',
+            fontSize: '48px',
             fontWeight: 'bold',
             textAlign: 'center',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-            fontFamily: '"Comic Sans MS", cursive, sans-serif',
           }}
         >
           <div style={{ display: 'flex' }}>Unable to retrieve user information: No FID provided</div>
@@ -191,26 +190,26 @@ app.frame('/check-allowance', async (c) => {
             color: 'white',
             fontWeight: 'bold',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-            fontFamily: '"Comic Sans MS", cursive, sans-serif',
           }}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
               <div style={{display: 'flex', flexDirection: 'column'}}>
                 <span style={{
-                  fontSize: '80px', 
+                  fontSize: '90px',
+                  lineHeight: '1',
                   textShadow: '3px 3px 6px rgba(0,0,0,0.5)',
-                  fontFamily: '"Comic Sans MS", cursive, sans-serif',
+                  color: '#FFD700', // Gold color for username
                 }}>@{userInfo.profileName}</span>
                 <span style={{
-                  fontSize: '30px', 
+                  fontSize: '36px',
                   textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-                  fontFamily: '"Comic Sans MS", cursive, sans-serif',
+                  color: '#ADD8E6', // Light blue for FID and Rank
                 }}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
               </div>
               <img src={userInfo.profileImage} alt="Profile" style={{
                 width: '240px', 
                 height: '240px', 
                 borderRadius: '50%',
-                border: '4px solid black'
+                border: '4px solid #FFD700' // Gold border for profile image
               }} />
             </div>
             
@@ -220,25 +219,24 @@ app.frame('/check-allowance', async (c) => {
               alignItems: 'flex-end', 
               marginTop: 'auto', 
               marginBottom: '20px', 
-              fontSize: '33px',
-              fontFamily: '"Comic Sans MS", cursive, sans-serif',
+              fontSize: '40px',
             }}>
               <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-                <span style={{marginRight: '10px'}}>Daily allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.tip_allowance} $Degen</span>
+                <span style={{marginRight: '10px', color: '#98FB98'}}>Daily allowance :</span>
+                <span style={{fontWeight: '900', minWidth: '200px', textAlign: 'right', color: '#FF69B4'}}>{latestAllowance.tip_allowance} $Degen</span>
               </div>
               <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-                <span style={{marginRight: '10px'}}>Remaining allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
+                <span style={{marginRight: '10px', color: '#98FB98'}}>Remaining allowance :</span>
+                <span style={{fontWeight: '900', minWidth: '200px', textAlign: 'right', color: '#FF69B4'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
               </div>
             </div>
             
             <div style={{
               display: 'flex', 
-              fontSize: '24px', 
+              fontSize: '28px', 
               alignSelf: 'flex-end', 
               textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-              fontFamily: '"Comic Sans MS", cursive, sans-serif',
+              color: '#F0E68C', // Khaki color for timestamp
             }}>
               As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
                 month: 'numeric',
@@ -273,12 +271,11 @@ app.frame('/check-allowance', async (c) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            color: 'white',
-            fontSize: '40px',
+            color: '#FFD700',
+            fontSize: '48px',
             fontWeight: 'bold',
             textAlign: 'center',
             textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-            fontFamily: '"Comic Sans MS", cursive, sans-serif',
           }}
         >
           <div style={{ display: 'flex' }}>Error, or you don't have an allowance</div>
