@@ -14,7 +14,7 @@ interface AllowanceData {
 export const app = new Frog({ //Always include if using Airstack so it tracks moxie
   basePath: '/api',
   imageOptions: { width: 1200, height: 628 },
-  title: '$HAM Token Tracker',
+  title: '$Degen Token Tracker',
   hub: {
     apiUrl: "https://hubs.airstack.xyz",
     fetchOptions: {
