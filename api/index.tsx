@@ -414,7 +414,7 @@ app.frame('/share', async (c) => {
           <div>Error fetching user data. Please try again later.</div>
         </div>
       ),
-      intents: [<Button action="/">Back to Home</Button>],
+      intents: [<Button action="/">Back To Home</Button>],
     });
   }
 });
