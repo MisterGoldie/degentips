@@ -4,16 +4,6 @@ import { Button, Frog } from 'frog'
 import { handle } from 'frog/vercel'
 import { neynar } from 'frog/middlewares'
 
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      AIRSTACK_API_KEY: string;
-      NEYNAR_API_KEY: string;
-      NEXT_PUBLIC_SITE_URL: string;
-    }
-  }
-}
-
 interface AllowanceData {
   snapshot_day: string;
   tip_allowance: string;
@@ -21,7 +11,7 @@ interface AllowanceData {
   user_rank: string;
 }
 
-export const app = new Frog({
+export const app = new Frog({ //Always include if using Airstack so it tracks moxie
   basePath: '/api',
   imageOptions: { width: 1200, height: 628 },
   title: '$Degen Token Tracker',
@@ -29,14 +19,14 @@ export const app = new Frog({
     apiUrl: "https://hubs.airstack.xyz",
     fetchOptions: {
       headers: {
-        "x-airstack-hubs": process.env.AIRSTACK_API_KEY || '',
+        "x-airstack-hubs": "103ba30da492d4a7e89e7026a6d3a234e", // Your Airstack API key
       }
     }
   }
 }).use(
   neynar({
-    apiKey: process.env.NEYNAR_API_KEY || '',
-    features: ['interactor', 'cast'], // Ensure this array is always defined
+    apiKey: 'NEYNAR_FROG_FM',
+    features: ['interactor', 'cast'],
   })
 );
 
@@ -54,7 +44,7 @@ const backgroundImages = [
 const zeroBalanceImage = "https://bafybeif5xdeft5mfhofj3zrawmn3ldqkhemukuclndie6pnomusiwn2xoe.ipfs.w3s.link/error%20frame.png";
 const errorBackgroundImage = "https://bafybeibrve55mf2l6mso53ssps75qato22s74zsvuaaqvnowi32divdqfu.ipfs.w3s.link/error%20frame%20(2).png";
 const AIRSTACK_API_URL = 'https://api.airstack.xyz/gql';
-const AIRSTACK_API_KEY = process.env.AIRSTACK_API_KEY;
+const AIRSTACK_API_KEY = '103ba30da492d4a7e89e7026a6d3a234e';
 
 async function getAllowanceData(fid: string): Promise<AllowanceData[]> {
   try {
@@ -98,7 +88,7 @@ async function getUserInfo(fid: string): Promise<{ profileName: string; profileI
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': AIRSTACK_API_KEY || '',
+        'Authorization': AIRSTACK_API_KEY,
       },
       body: JSON.stringify({ query }),
     });
@@ -118,7 +108,7 @@ async function getUserInfo(fid: string): Promise<{ profileName: string; profileI
 
 app.frame('/', () => {
   const gifUrl = 'https://bafybeiebmg56vpvwrbsa3znglzj4xv3mwlpzcrgyuydcdsscs2cqbf4rju.ipfs.w3s.link/IMG_8003.GIF'
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
+  const baseUrl = 'https://degentips-lac.vercel.app/'
 
   const html = `
     <!DOCTYPE html>
@@ -201,7 +191,7 @@ app.frame('/check-allowance', async (c) => {
       : `Check your $DEGEN tipping stats with @goldie's frame!`;
 
     // Create the share URL (this should point to your frame's entry point)
-    const shareUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api`;
+    const shareUrl = `https://degentips-lac.vercel.app/api`;
 
     // Create the Farcaster share URL
     const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
@@ -292,6 +282,7 @@ app.frame('/check-allowance', async (c) => {
     });
   }
 });
+
 app.frame('/share', async (c) => {
   const { fid } = c.frameData ?? {};
 
@@ -342,7 +333,7 @@ app.frame('/share', async (c) => {
       : `Check your $DEGEN tipping stats with @goldie's frame!`;
 
     // Create the share URL (this should point to your frame's entry point)
-    const shareUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api`;
+    const shareUrl = `https://degentips-lac.vercel.app/api`;
 
     // Create the Farcaster share URL
     const farcasterShareURL = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
