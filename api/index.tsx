@@ -36,7 +36,7 @@ export const app = new Frog({
 }).use(
   neynar({
     apiKey: process.env.NEYNAR_API_KEY || '',
-    features: ['interactor', 'cast'],
+    features: ['interactor', 'cast'], // Ensure this array is always defined
   })
 );
 
