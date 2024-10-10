@@ -18,7 +18,7 @@ export const app = new Frog({ //Always include if using Airstack so it tracks mo
     height: 628,
     fonts: [
       {
-        name: 'Rubik Lines',
+        name: 'Mynerve',
         source: 'google',
         weight: 400,
       },
