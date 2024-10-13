@@ -229,6 +229,10 @@ app.frame('/check-allowance', async (c) => {
               alt="Profile" 
               width="240" 
               height="240"
+              onError={(e: { currentTarget: { src: string; }; }) => {
+                console.error('Profile image failed to load:', e);
+                e.currentTarget.src = 'path/to/fallback/image.jpg';
+              }}
               style={{
                 borderRadius: '50%',
                 border: '4px solid black',
