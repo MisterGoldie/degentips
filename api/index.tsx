@@ -348,6 +348,10 @@ app.frame('/share', async (c) => {
       ? zeroBalanceImage
       : "https://bafybeidhdqc3vwqfgzharotwqbsvgd5wuhyltpjywy2hvyqhtm7laovihm.ipfs.w3s.link/check%20frame%204.png";
 
+    // Remove Cloudinary transformations from the profile image URL
+    let profileImageUrl = userInfo.profileImage ? userInfo.profileImage.split('/').pop() : '';
+    profileImageUrl = profileImageUrl ? `https://i.imgur.com/${profileImageUrl}` : 'https://example.com/default-profile-image.jpg';
+
     // Create the share text
     const shareText = latestAllowance 
       ? `My $DEGEN tipping stats: Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`
@@ -374,39 +378,50 @@ app.frame('/share', async (c) => {
         }}>
           <div style={{
             display: 'flex',
-            flexDirection: 'column',
-            flex: 1,
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            marginBottom: '20px',
           }}>
-            <div style={{fontSize: '48px', marginBottom: '20px'}}>
-              $DEGEN Tipping Stats for @{userInfo.profileName}
+            <div style={{display: 'flex', flexDirection: 'column'}}>
+              <span style={{fontSize: '48px', marginBottom: '10px'}}>@{userInfo.profileName}</span>
+              <span style={{fontSize: '24px'}}>FID: {fid} {latestAllowance && `| Rank: ${latestAllowance.user_rank}`}</span>
             </div>
-            {latestAllowance && (
-              <>
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>
-                  Daily Allowance: {latestAllowance.tip_allowance} $DEGEN
-                </div>
-                <div style={{fontSize: '36px', marginBottom: '10px'}}>
-                  Remaining: {latestAllowance.remaining_tip_allowance} $DEGEN
-                </div>
-                <div style={{fontSize: '24px', marginBottom: '10px'}}>
-                  Rank: {latestAllowance.user_rank}
-                </div>
-                <div style={{fontSize: '18px', marginTop: '10px'}}>
-                  As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
-                    month: 'numeric',
-                    day: 'numeric',
-                    year: '2-digit',
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    timeZone: 'America/Chicago',
-                    hour12: true
-                  })} CST
-                </div>
-              </>
-            )}
-            <div style={{fontSize: '24px', marginTop: 'auto'}}>
-              Check your $DEGEN tipping stats with @goldie's frame!
+            <img 
+              src={profileImageUrl} 
+              alt="Profile" 
+              width="120" 
+              height="120"
+              style={{
+                borderRadius: '50%',
+                border: '4px solid black',
+                boxShadow: '0 0 20px rgba(0,0,0,0.7)',
+                objectFit: 'cover',
+              }} 
+            />
+          </div>
+          {latestAllowance && (
+            <div style={{display: 'flex', flexDirection: 'column', marginTop: '20px', fontSize: '36px'}}>
+              <div style={{marginBottom: '10px'}}>
+                Daily Allowance: {latestAllowance.tip_allowance} $DEGEN
+              </div>
+              <div style={{marginBottom: '10px'}}>
+                Remaining: {latestAllowance.remaining_tip_allowance} $DEGEN
+              </div>
+              <div style={{fontSize: '18px', marginTop: '10px'}}>
+                As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
+                  month: 'numeric',
+                  day: 'numeric',
+                  year: '2-digit',
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  timeZone: 'America/Chicago',
+                  hour12: true
+                })} CST
+              </div>
             </div>
+          )}
+          <div style={{fontSize: '24px', marginTop: 'auto'}}>
+            Check your $DEGEN tipping stats with @goldie's frame!
           </div>
         </div>
       ),
