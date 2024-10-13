@@ -195,6 +195,19 @@ app.frame('/check-allowance', async (c) => {
       ? zeroBalanceImage 
       : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
 
+    // Validate and sanitize the profile image URL
+    let profileImageUrl = 'https://example.com/default-profile-image.jpg'; // Default fallback image
+    if (userInfo.profileImage && userInfo.profileImage.startsWith('http')) {
+      try {
+        new URL(userInfo.profileImage); // This will throw an error if the URL is invalid
+        profileImageUrl = userInfo.profileImage;
+      } catch (error) {
+        console.error('Invalid profile image URL:', userInfo.profileImage);
+      }
+    }
+
+    console.log('Profile Image URL:', profileImageUrl);
+
     // Create the share text
     const shareText = latestAllowance 
       ? `Degen Dave's daily tipping stats🎩. Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`
@@ -224,9 +237,9 @@ app.frame('/check-allowance', async (c) => {
               <span style={{fontSize: '80px', textShadow: '3px 3px 6px rgba(0,0,0,0.5)'}}>@{userInfo.profileName}</span>
               <span style={{fontSize: '30px', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>FID: {fid} {latestAllowance && `| Rank: ${latestAllowance.user_rank}`}</span>
             </div>
-            <img src={userInfo.profileImage} alt="Profile" style={{
-              width: '240px', 
-              height: '240px', 
+            <img src={profileImageUrl} alt="Profile" style={{
+              width: '200px', 
+              height: '200px', 
               borderRadius: '50%',
               border: '4px solid black',
               boxShadow: '0 0 20px rgba(0,0,0,0.7)',
