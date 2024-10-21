@@ -190,21 +190,20 @@ app.frame('/check-allowance', async (c) => {
     const latestAllowance = allowanceDataArray && allowanceDataArray.length > 0 ? allowanceDataArray[0] : null;
     console.log('Latest Allowance Data:', latestAllowance);
 
-    const hasZeroBalance = !latestAllowance || parseFloat(latestAllowance.remaining_tip_allowance) <= 0;
+    if (!latestAllowance) {
+      throw new Error('No allowance data available');
+    }
+
+    const hasZeroBalance = parseFloat(latestAllowance.remaining_tip_allowance) <= 0;
     const currentBackgroundImage = hasZeroBalance 
       ? zeroBalanceImage 
       : backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
 
-    // Remove Cloudinary transformations from the profile image URL
-    let profileImageUrl = userInfo.profileImage ? userInfo.profileImage.split('/').pop() : '';
-    profileImageUrl = profileImageUrl ? `https://i.imgur.com/${profileImageUrl}` : 'https://example.com/default-profile-image.jpg';
-
-    console.log('Profile Image URL:', profileImageUrl);
+    // Use the profileImage directly from userInfo
+    const profileImageUrl = userInfo.profileImage || 'https://example.com/default-profile-image.jpg';
 
     // Create the share text
-    const shareText = latestAllowance 
-      ? `Degen Dave's daily tipping stats🎩. Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`
-      : `Check your $DEGEN tipping stats with @goldie's frame!`;
+    const shareText = `Degen Dave's daily tipping stats🎩. Daily allowance: ${latestAllowance.tip_allowance}, Remaining: ${latestAllowance.remaining_tip_allowance}. Check yours with @goldie's frame!`;
 
     // Create the share URL (this should point to your frame's entry point)
     const shareUrl = `https://degentips-lac.vercel.app/api`;
@@ -228,14 +227,14 @@ app.frame('/check-allowance', async (c) => {
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
             <div style={{display: 'flex', flexDirection: 'column'}}>
               <span style={{fontSize: '80px', textShadow: '3px 3px 6px rgba(0,0,0,0.5)'}}>@{userInfo.profileName}</span>
-              <span style={{fontSize: '30px', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>FID: {fid} {latestAllowance && `| Rank: ${latestAllowance.user_rank}`}</span>
+              <span style={{fontSize: '30px', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>FID: {fid} | Rank: {latestAllowance.user_rank}</span>
             </div>
             <img 
               src={profileImageUrl} 
               alt="Profile" 
-              width="240" 
-              height="240"
               style={{
+                width: '240px', 
+                height: '240px', 
                 borderRadius: '50%',
                 border: '4px solid black',
                 boxShadow: '0 0 20px rgba(0,0,0,0.7)',
@@ -244,29 +243,28 @@ app.frame('/check-allowance', async (c) => {
             />
           </div>
           
-          {latestAllowance && (
-            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '33px'}}>
-              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-                <span style={{marginRight: '10px'}}>Daily allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.tip_allowance} $Degen</span>
-              </div>
-              <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
-                <span style={{marginRight: '10px'}}>Remaining allowance :</span>
-                <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
-              </div>
-              <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
-                As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
-                  month: 'numeric',
-                  day: 'numeric',
-                  year: '2-digit',
-                  hour: 'numeric',
-                  minute: '2-digit',
-                  timeZone: 'America/Chicago',
-                  hour12: true
-                })} CST
-              </div>
+          <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginTop: 'auto', marginBottom: '20px', fontSize: '33px'}}>
+            <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+              <span style={{marginRight: '10px'}}>Daily allowance :</span>
+              <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.tip_allowance} $Degen</span>
             </div>
-          )}
+            <div style={{display: 'flex', justifyContent: 'flex-end', width: '100%'}}>
+              <span style={{marginRight: '10px'}}>Remaining allowance :</span>
+              <span style={{fontWeight: '900', minWidth: '150px', textAlign: 'right'}}>{latestAllowance.remaining_tip_allowance} $Degen</span>
+            </div>
+          </div>
+          
+          <div style={{display: 'flex', fontSize: '24px', alignSelf: 'flex-end', textShadow: '1px 1px 2px rgba(0,0,0,0.5)'}}>
+            As of {new Date(latestAllowance.snapshot_day).toLocaleString('en-US', {
+              month: 'numeric',
+              day: 'numeric',
+              year: '2-digit',
+              hour: 'numeric',
+              minute: '2-digit',
+              timeZone: 'America/Chicago',
+              hour12: true
+            })} CST
+          </div>
         </div>
       ),
       intents: [
